@@ -1,6 +1,6 @@
 <?php
 
-function goto_view($view_path) {
+function goto_view(&$data,$view_path) {
 	if( @file_exists( $view_path)) {
 		include_once $view_path;
 	} else echo $view_path." fails";
@@ -8,10 +8,32 @@ function goto_view($view_path) {
 
 
 function preparedata(&$data,$viewname) {
+
+    
+    switch($viewname) {
+        case 'show_user_profile':
+            $data['person']['fraction_id']='1';
+            $data['person']['name']='имя персонажа';
+            $data['person']['description']='описание персонажа. бла бла бла бла бла...';
+            $data['person']['account']='10000';
+            $data['person']['score']='145000';
+            $data['person']['status']='EFK';
+            $data['person']['experience']='8438';
+            $data['person']['rang']='новичок';
+        case 'game_view':
+            $data['user']['login']='megauser';
+            break;
+        default:
+            break;
+    }
 }
+
+
+////////////////////////////////////////////////////////////
 
 	$viewname="";
 	$view_dir="views/";
+    $data=array('person'=>array() );
 
 	if(isset($_GET['viewname'])) {
 		$viewname=$_GET['viewname'];
@@ -46,10 +68,8 @@ function preparedata(&$data,$viewname) {
 		echo "</form>";
 		echo "</body></html>";
 	} else {
-		
-		$data=array();
-		preparedata($data, $viewname);
-		goto_view($view_dir.$viewname.".php");
+        preparedata($data, $viewname);
+        goto_view($data,$view_dir.$viewname.".php");
 	}
 ?>
 
