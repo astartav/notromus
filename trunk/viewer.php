@@ -1,11 +1,20 @@
 <?php
 
+// RULES!!
+//
+//
+//
+// 1. TEMPLATE VIEW - the set of VIEWs are included into div blocks.
+//
+// 2. VIEW - HTML code with PHP parametarisation defining UI block
+//
+// 3. VIEWER - php script to select and show the template view with a test data
+
 function goto_view(&$data,$view_path) {
 	if( @file_exists( $view_path)) {
 		include_once $view_path;
 	} else echo $view_path." fails";
 }
-
 
 function preparedata(&$data,$viewname) {
 
@@ -20,8 +29,20 @@ function preparedata(&$data,$viewname) {
             $data['person']['status']='EFK';
             $data['person']['experience']='8438';
             $data['person']['rang']='новичок';
-        case 'game_view':
-            $data['user']['login']='megauser';
+            break;
+        case 'change_user_profile':
+        case 'create_user_profile':
+            $data['user']['user_login']='l-o-g-i-n';
+            $data['user']['user_password']='p-a-s-s-w-o-r-d';
+            $data['user']['user_email']='e-m-a-i-l';
+            break;
+        case 'main_menu':
+            $data['user']['user_login']='megauser';
+            break;
+        case 'project_news':
+            $data['pnews'][]="Издательство Warner Bros. объявило о том, что перезапустит многопользовательскую ролевую игру The Lord of the Rings Online на основе бизнес-модели free2play. Об этом сообщает Eurogamer. Открытое бета-тестирование бесплатной The Lord of the Rings Online начнется 16 июня 2010 года, а перезапуск проекта запланирован на осень. ";
+            $data['pnews'][]="В ночь на 8 июня грузовой корабль \"Прогресс М-05М\" в два этапа завершил коррекцию орбиты МКС. Об этом сообщает \"Интерфакс\" со ссылкой на представителя Центра управления полетами. ";
+            $data['pnews'][]="Французские психиатры поставили диагноз Дарту Вейдеру - персонажу киноэпопеи \"Звездные войны\", одному из самых известных и популярных злодеев в истории кинематографа. Как сообщает Fox News, оказалось, что руководитель армии Галактической Империи страдает пограничным расстройством личности - состоянием, характеризующимся чрезмерной импульсивностью и высоким уровнем тревожности. ";
             break;
         default:
             break;
@@ -32,14 +53,29 @@ function preparedata(&$data,$viewname) {
 ////////////////////////////////////////////////////////////
 
 	$viewname="";
+
 	$view_dir="views/";
-    $data=array('person'=>array() );
+    $view_template_dir="view_templates/";
+
+    $data=array('person'=>array(), 'user'=>array(), 'pnews'=>array() );
+
+
+    $view_templates=array(
+        'guest_login'=>array('guest_login'),
+        'guest_remind'=>array('guest_remind'),
+        'guest_registry'=>array('guest_registry'),
+        'create_profile'=>array('main_menu','mode_menu','create_user_profile','chat'),
+        'change_profile'=>array('main_menu','mode_menu','change_user_profile','chat'),
+        'show_profile'=>array('main_menu','mode_menu','show_user_profile','chat'),
+        'project_news'=>array('main_menu','mode_menu','project_news','chat'),
+    );
 
 	if(isset($_GET['viewname'])) {
 		$viewname=$_GET['viewname'];
 	}
 
-	if($viewname=="") {?>
+	if($viewname=="") {
+    ?>
 
 	<html>
     <head>
@@ -52,65 +88,35 @@ function preparedata(&$data,$viewname) {
         border-spacing: 4px;
         }
 
+        #viewlist {
+            padding: 10px;
+            border: 1px black dotted;
+        }
+
     </style>
     <script src="js/viewer.js" ></script>
     </head>
     <body>
 <?php
 		echo "<form name='viewform' method='get'><input type='hidden' name='viewname' value='' />";
-		foreach (new DirectoryIterator($view_dir) as $file) {
-			if(!$file->isDot() ) {
-                $v=explode('.',$file);
-				echo "<li><a href='".$file."' onclick=\"return send_to_form('viewname','".$v[0]."');\">".$file."</a>";
-			}
-		}
-		
+        echo "<div id='viewlist'><ul>";
+        foreach ($view_templates as $k=>$v) {
+            echo "<li><a href='#' onclick=\"return send_to_form('viewname','".$k."');\">".$k."</a>";
+        }
+
+        echo "</ul></div>";
 		echo "</form>";
 		echo "</body></html>";
 	} else {
-        preparedata($data, $viewname);
-        goto_view($data,$view_dir.$viewname.".php");
+        
+        goto_view($data,$view_dir."html_shapka".".php");
+        if(isset($view_templates[$viewname])) {
+            foreach ($view_templates[$viewname] as $v) {
+                preparedata($data, $v);
+                goto_view($data,$view_dir.$v.".php");
+                //echo "<li><a href='#' onclick=\"return send_to_form('viewname','".$v."');\">".$v."</a>";
+            }
+        }
+        goto_view($data,$view_dir."html_footer".".php");
 	}
-?>
-
-
-<?php
-/*
-    $view_dir="./";
-
-    $data=array(
-        'mainmenu'=>array(
-            "menuitem1"=>"onclick=\"function1();\" ",
-            "menuitem2"=>"onclick=\"function2();\" ",
-            "menuitem3"=>"onclick=\"function3();\" ",
-            "menuitem4"=>"onclick=\"function4();\" ",
-            "menuitem5"=>"onclick=\"function5();\" ",
-            "menuitem6"=>"onclick=\"function6();\" "),
-
-        'modemenu'=>array(
-            "menuitem1"=>"onclick=\"function1();\" ",
-            "menuitem2"=>"onclick=\"function2();\" ",
-            "menuitem3"=>"onclick=\"function3();\" ",
-            "menuitem4"=>"onclick=\"function4();\" ",
-            "menuitem5"=>"onclick=\"function5();\" ",
-            "menuitem6"=>"onclick=\"function6();\" "),
-
-        'userprofile'=>array(
-            "имя"=>"аш99",
-            "fraction"=>"фракция 99",
-            "параметр3"=>"значение3",
-            "параметр4"=>"значение4",
-            "параметр5"=>"значение5" ),
-
-        'debug'=>array(
-            "что то где то случилось",
-            "нафига козе баян",
-            "где взять денег?",
-            "и т.д. ... ... "
-        )
-
-    );
-
-
-*/
 ?>
