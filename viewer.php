@@ -64,6 +64,7 @@ function preparedata(&$data,$viewname) {
         'guest_login'=>array('guest_login'),
         'guest_remind'=>array('guest_remind'),
         'guest_registry'=>array('guest_registry'),
+		'user_mode'=>array('user_mode'),
         'create_profile'=>array('main_menu','mode_menu','create_user_profile','chat'),
         'change_profile'=>array('main_menu','mode_menu','change_user_profile','chat'),
         'show_profile'=>array('main_menu','mode_menu','show_user_profile','chat'),
