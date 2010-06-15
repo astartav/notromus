@@ -1,9 +1,8 @@
 ﻿root { 
     display: block;
 }
-
 body, html {
-    background: white;
+    background: url('../images/background.gif') repeat-x;
     color: #221133;
 	border: 1px solid black;
     margin: 0;
@@ -11,8 +10,46 @@ body, html {
 	width: 100%;
 	height: 100%;
 	}
-
+#mainmenu{
+	margin-left: 50px;
+    width: 90%;
+	margin-top: 20px;
+    padding-top: 25px;
+    color: #fffdd4;
+    height: 70px;
+    background: url('../images/menu_center.png') repeat-x;
+    font-size: 17px;
+	}
+#mainmenu a{
+	color: #fffdd4;
+    text-decoration: none;
+	}
+#left_menu{
+	background: url('../images/menu_left.png') no-repeat; 
+	float: left; 
+	margin-left: 30px;
+	margin-top: 20px;
+	padding-top: 25px; 
+	width: 20px;
+    height: 70px;
+	}
+#right_menu{
+	background: url('../images/menu_right.png') repeat-x; 
+	float: right;
+	margin-top: -95px;
+	margin-right: 29px;
+	padding-top: 25px; 
+	width: 24px;
+    height: 70px;
+	}
+#user_profile{
+	float: right;
+	}	
+	
+#user_profile a{text-decoration:underline;}	
+#exit a{color: #ea2424; text-decoration: none; border-bottom: 1px solid #ea2424;}
 .smallotez {
+
     font-family: Helvetica;
     font-style: normal;
     font-size: 8pt;
@@ -45,7 +82,7 @@ body, html {
     float: left;
     position: relative;
     text-align: left;
-    background: #f5f5f5;
+    background: none;
     width: 1024px;
     height: 100%;
     font-family: Helvetica;

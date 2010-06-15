@@ -44,6 +44,10 @@ function preparedata(&$data,$viewname) {
             $data['pnews'][]="В ночь на 8 июня грузовой корабль \"Прогресс М-05М\" в два этапа завершил коррекцию орбиты МКС. Об этом сообщает \"Интерфакс\" со ссылкой на представителя Центра управления полетами. ";
             $data['pnews'][]="Французские психиатры поставили диагноз Дарту Вейдеру - персонажу киноэпопеи \"Звездные войны\", одному из самых известных и популярных злодеев в истории кинематографа. Как сообщает Fox News, оказалось, что руководитель армии Галактической Империи страдает пограничным расстройством личности - состоянием, характеризующимся чрезмерной импульсивностью и высоким уровнем тревожности. ";
             break;
+        case 'map':
+            $data['map']['name']='лесов полей и рек';
+            $data['map']['coord1']='868678686';
+            break;
         default:
             break;
     }
@@ -57,7 +61,7 @@ function preparedata(&$data,$viewname) {
 	$view_dir="views/";
     $view_template_dir="view_templates/";
 
-    $data=array('person'=>array(), 'user'=>array(), 'pnews'=>array() );
+    $data=array('person'=>array(), 'user'=>array(), 'pnews'=>array(), 'map'=>array());
 
 
     $view_templates=array(
@@ -69,6 +73,7 @@ function preparedata(&$data,$viewname) {
         'change_profile'=>array('main_menu','mode_menu','change_user_profile','chat'),
         'show_profile'=>array('main_menu','mode_menu','show_user_profile','chat'),
         'project_news'=>array('main_menu','mode_menu','project_news','chat'),
+        'map'=>array('main_menu','mode_menu','map','chat')
     );
 
 	if(isset($_GET['viewname'])) {
@@ -110,7 +115,7 @@ function preparedata(&$data,$viewname) {
 		echo "</body></html>";
 	} else {
         
-        goto_view($data,$view_dir."html_shapka".".php");
+        goto_view($data,$view_dir."html_header".".php");
         if(isset($view_templates[$viewname])) {
             foreach ($view_templates[$viewname] as $v) {
                 preparedata($data, $v);
