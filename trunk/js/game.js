@@ -261,7 +261,7 @@ function sendw(_cmd,_source_ids) {
 function recProcedure() {
     var _param, _data, _cmd, _pro, _comment;
     if(xhttp.readyState == 4 && xhttp.status == 200) {
-        alert("REC:"+xhttp.responseText);
+       // alert("REC:"+xhttp.responseText);
         var _xmlDoc = xhttp.responseXML.documentElement;
         var mess_arr = _xmlDoc.getElementsByTagName("m");
         for(var i=0; i<mess_arr.length; i++) {
@@ -304,7 +304,7 @@ function sendi(cmd,value) {
 	var sendMessMetaData;
 	if( xhttp.readyState == 4 || xhttp.readyState == 0 ) {
 		sendMessMetaData = "game.php?mode="+mode+"&cmd="+cmd+"&val="+value;
-                alert(sendMessMetaData);
+          //      alert(sendMessMetaData);
                 xhttp.open("GET", sendMessMetaData, true);
 		xhttp.onreadystatechange = recProcedure;
 		xhttp.send(null);
