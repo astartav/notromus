@@ -117,6 +117,7 @@ function parse_mess(_cmd, _param, _data) {
             }
             break;
         case 'replace':
+            alert("replacing "+_param+" by "+_data);
             _id=document.getElementById(_param);
             if(_id!=undefined) {
 				//alert("replacing: "+_data);
@@ -287,7 +288,9 @@ function recProcedure() {
                     break;
                 }
             } else {
+                
                 _data = mess_arr[i].childNodes[2].childNodes[0].nodeValue;
+                alert("CMD: "+ _cmd+", PARAM: "+_param+ ", DATA: "+_data);
             }
             parse_mess(_cmd,_param,_data);
         }

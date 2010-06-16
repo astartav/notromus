@@ -37,7 +37,7 @@ function preparedata(&$data,$viewname) {
             $data['user']['user_email']='e-m-a-i-l';
             break;
         case 'main_menu':
-            $data['user']['user_login']='megauser';
+            $data['user'][0]['user_login']='megauser';
             break;
         case 'project_news':
             $data['pnews'][]="Издательство Warner Bros. объявило о том, что перезапустит многопользовательскую ролевую игру The Lord of the Rings Online на основе бизнес-модели free2play. Об этом сообщает Eurogamer. Открытое бета-тестирование бесплатной The Lord of the Rings Online начнется 16 июня 2010 года, а перезапуск проекта запланирован на осень. ";
@@ -66,6 +66,7 @@ function preparedata(&$data,$viewname) {
 
     $view_templates=array(
         'guest_login'=>array('guest_login'),
+        'game_structure'=>array('game_structure'),
         'guest_remind'=>array('guest_remind'),
         'guest_registry'=>array('guest_registry'),
 		'user_mode'=>array('user_mode'),
