@@ -34,152 +34,6 @@ function send_mail(&$email_body) {
     return true;
 }
 
-/* added to view
- *
- * function guest_login(){
-    gen_debug('guest_login calling',4);
-    $out="
-        <div id='login'>
-            Логин:
-            <input id='login1' type='text' \><br>
-            Пароль:
-            <input id='password' type='password' \><br><br>
-            <input id='login_button' type='button' value='Войти' onclick=\"sendw('login','login1;password');\" />
-            <a href='#' onclick=\"sendi('registry','');\" >Регистрация</a>
-            <a href='#' onclick=\"sendi('reminder','');\" >Забыли пароль?</a>
-        </div>";
-    return $out;
-}*/
-
-/*
- * add to view
-function guest_registry(){
-    gen_debug('guest_registry calling',4);
-    $out="
-        <div id='login'>
-            Логин:
-            <input id='login1' type='text' \><br>
-            Пароль:
-            <input id='password1' type='password' \><br>
-            Повторить пароль:
-            <input id='password2' type='password' \><br>
-            E-mail:
-            <input id='email' type='text' \><br><br>
-            <input id='login_button' type='button' value='Зарегистрировать' onclick=\"sendw('registry','login1;password1;password2;email');\" />
-            <a href='#' onclick=\"sendi('login','');\" >Войти</a>
-            <a href='#' onclick=\"sendi('reminder','');\" >Забыли пароль?</a>
-        </div>";
-    return $out;
-}*/
-
-/*
-function guest_reminder(){
-    gen_debug('guest_reminder calling',4);
-    $out="
-        <div id='login'>
-            E-mail:
-            <input id='email' type='text' \><br><br>
-            <input id='login_button' type='button' value='Напомнить пароль' onclick=\"sendw('reminder','email');\" />
-            <a href='#' onclick=\"sendi('login','');\" >Войти</a>
-            <a href='#' onclick=\"sendi('registry','');\" >Регистрация</a>
-        </div>";
-    return $out;
-}*/
-
-function game_structure($name) {
-    gen_debug('game_structure:'.$name,4);
-  /*  $out="
-    
-    <div id='globalmenu'>
-    <span> | </span>
-    </div>
-    <div id='menu'></div>
-    <div id='controlbar'></div>
-    <div id='monitor'></div>
-    <div id='chat'>
-        <div id='chat_monitor'></div>
-        <div id='notifies'></div>
-        <input id='chat_input' type='text' value=''/>
-        <input id='chat_timestamp' type='hidden' value='0' />
-        <input id='chat_button' type='button' value='send' onclick=\"sendw('chat','chat_input;chat_timestamp');\" />
-    </div>
-    ";*/
-    return $out;//<input id='chat_up' type='button' value='up' onclick=\"sendw('chatup','chat_timestamp');\" />
-}
-
-function user_profile(&$data) {
-     /*$out="
-         <div id='login'>
-            <h2>Профиль пользователя</h2>
-            Имя пользователя:
-            <input id='login1' type='text' value=".$data['user'][0]['user_login']." \><br>
-            Пароль:
-            <input id='password1' type='password' value=".$data['user'][0]['user_password']." \><br>
-            Повторить пароль:
-            <input id='password2' type='password' value=".$data['user'][0]['user_password']." \><br>
-            E-mail:
-            <input id='email' type='text' value=".$data['user'][0]['user_email']." \><br>
-            Avatar:
-            <img src=images/users/".$data['user'][0]['user_avatar']." ><br>
-            <a href='#' onclick=\"sendw('userprofile','login1;password1;password2');\" >Обновить данные</a>
-         </div>";*/
-        return $out;
-}
-
-function user_encyclopedia() {
-     /*$out="
-        <h2>Энциклопедия</h2>
-        <form>
-        <input name='topic' id='topic' type='hidden' value='' \>
-        <input name='chapter' id='chapter' type='hidden' value='' \>
-        <input name='page' id='page' type='hidden' value='' \>
-        <select id='topics' size='10' onchange=\"this.form.topic.value=options[this.selectedIndex].value;sendw('navigation','topic;chapter;page');\" >
-            <option value='fractions'>Фракции</option>
-            <option value='navigation'>Навигация</option>
-            <option value='ship'>Корабли</option>
-            <option value='locations'>Локации</option>
-        </select>
-        <br>
-        <input name='newtopic' id='newtopic' type='text'\>
-        <input type='button' value='new topic' onclick=\"sendw('newtopic','topic;chapter;page');\" \>
-        </form>
-       ";*/
-        return $out; //onchange=\"sendw('encyclopedia','topic;'+options[this.selectedIndex].value);\"
-}
-
-function user_news(){
-  /*   $out="
-        <h2>Новости проекта</h2>
-        <p>Какие еще новости могут быть сейчас?</p>
-       ";*/
-        return $out;
-}
-
-function user_menu() {
-    $out="<span> </span>
-        <a href='#' onclick=\"sendi('userconfig','');\" >userconfig</a><span> </span>
-        <a href='#' onclick=\"sendi('forum','');\" >forum</a><span> </span>
-        <a href='#' onclick=\"sendi('gallery','');\" >gallery</a><span> </span>
-        <a href='#' onclick=\"sendi('about',' ');\" >about</a><span> </span>
-        ";
-    return $out;
-}
-
-
-function game_menu() {
-    // <input id='up' type='button' value='UP' onclick=\"sendi('up',' ');\" /><span> | </span>
-    $out="<span> | </span>
-        <a href='#' onclick=\"sendm('galaxy');\" >Навигация</a><span> | </span>
-        <a href='#' onclick=\"sendm('tuning');\" >Тюнинг</a><span> | </span>
-        <a href='#' onclick=\"sendm('person');\" >Персонаж</a><span> | </span>
-        ";
-    return $out;
-    /*
-      <a href='#' onclick=\"sendi('forum','');\" >forum</a><span> </span>
-      <a href='#' onclick=\"sendi('gallery','');\" >gallery</a><span> </span>
-      <a href='#' onclick=\"sendi('news','');\" >news</a><span> </span>
-     */
-}
 
 function game_control($param="") {
     $out="<span> | </span>
@@ -703,14 +557,10 @@ function galaxy_mouse_controller(&$data) {
 function login_controller(&$_data) {
     if(check_login($_data)) {
         gen_debug('login successfully:'.$_data['user'][0]['user_login'],4);
-        //
-        //echo gen_mess('replace', 'main', game_structure($_data['user'][0]['user_login']));
-        //echo gen_mess('replace', 'main', from_view($data, 'game_structure') );
         cmd_from_view($_data, 'game_structure', 'replace', 'main');
         echo gen_mess('mode', 'set', 'galaxy');
-        //echo gen_mess('replace', 'monitor', user_profile($_data));
+        echo gen_mess('replace', 'monitor', "<div id=map></div>");
         $_data['mode']='galaxy';
-      //  $_data['mode']='userpofile';
         $_data['cmd']='init';
         cmd_sink($_data);
     } else {
@@ -973,7 +823,7 @@ function cmd_sink(&$data) {
     switch($data['mode']) {
         case 'logout':
             if (do_logout($data)) {
-                echo gen_mess('replace', 'main', guest_login());
+                cmd_from_view($data, 'guest_login', 'replace', 'main');
                 echo gen_mess('mode', 'set', 'login');
             } else gen_debug('logout fails',2);
             break;

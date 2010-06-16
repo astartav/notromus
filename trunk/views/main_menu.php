@@ -1,6 +1,5 @@
-<div id="left_menu"></div><div id='mainmenu'>
-    
-    
+<div id="left_menu"></div>
+<div id='mainmenu'>
     <a href='./user.php' target="_blank" >Энциклопедия</a>&nbsp;&nbsp;&nbsp;
     <a href='#' onclick="sendm('news');" >Новости проекта</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href='#' onclick="sendm('galaxy');" >Игра</a><span>&nbsp;&nbsp;&nbsp;
