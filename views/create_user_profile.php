@@ -1,5 +1,5 @@
 <div id="monitor">
-<h2>Персонаж - выбор персонажа</h2>
+    <h2>Персонаж - выбор персонажа</h2>
         <form>
         фракция:<br />
         <input name='fraction' id='fraction' type='hidden' value='' />
