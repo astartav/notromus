@@ -117,7 +117,6 @@ function parse_mess(_cmd, _param, _data) {
             }
             break;
         case 'replace':
-            alert("replacing "+_param+" by "+_data);
             _id=document.getElementById(_param);
             if(_id!=undefined) {
 				//alert("replacing: "+_data);
@@ -288,9 +287,8 @@ function recProcedure() {
                     break;
                 }
             } else {
-                
                 _data = mess_arr[i].childNodes[2].childNodes[0].nodeValue;
-                alert("CMD: "+ _cmd+", PARAM: "+_param+ ", DATA: "+_data);
+                //alert("CMD: "+ _cmd+", PARAM: "+_param+ ", DATA: "+_data);
             }
             parse_mess(_cmd,_param,_data);
         }
@@ -305,7 +303,7 @@ function sendi(cmd,value) {
 	if( xhttp.readyState == 4 || xhttp.readyState == 0 ) {
 		sendMessMetaData = "game.php?mode="+mode+"&cmd="+cmd+"&val="+value;
           //      alert(sendMessMetaData);
-                xhttp.open("GET", sendMessMetaData, true);
+        xhttp.open("GET", sendMessMetaData, true);
 		xhttp.onreadystatechange = recProcedure;
 		xhttp.send(null);
      //           clearTimeout(timer1);
