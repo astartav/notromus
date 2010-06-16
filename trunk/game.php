@@ -461,7 +461,6 @@ function system_init_controller(&$data) {
         gen_debug("__person:".$data['person'][0]['person sector_id'],2);
         echo gen_mess('replace', 'controlbar', game_control(code_id($data['val_dec'])));
         echo gen_mess('replace', 'monitor', "<div id='map'></div>");
-        //$mess="<pp pn='ppic'>".$images_path."system_background.png"."</pp>";
         $mess="<pp pn='ppic'>images/systems/".$data['sectors'][0]['system_background']."</pp>";
         echo gen_multi_mess('setpp', 'monitor', $mess);
         echo gen_mess('mode', 'set', 'system');
@@ -494,7 +493,7 @@ function galaxy_init_controller(&$data) {
         //}
 
         gen_debug("location system_id:".$data['person'][0]['owner_system_id'],2);
-        echo gen_mess('replace', 'controlbar', '<span>|</span><span>элементы управления галактикой... не предусмотрено!</span><span>|</span>');
+       // echo gen_mess('replace', 'controlbar', '<span>|</span><span>элементы управления галактикой... не предусмотрено!</span><span>|</span>');
         echo gen_mess('replace', 'monitor', "<div id='map'></div>");
         $mess="<pp pn='ppic'>images/galaxy/galaxy_background.png"."</pp>";
         echo gen_multi_mess('setpp', 'monitor', $mess);
@@ -1095,7 +1094,8 @@ function cmd_sink(&$data) {
             }
             break;
         default:
-            echo gen_mess('replace', 'main', game_structure($_data['user'][0]['user_login']));
+            cmd_from_view($_data, 'game_structure', 'replace', 'main');
+            //echo gen_mess('replace', 'main', game_structure($_data['user'][0]['user_login']));
             //echo gen_mess('mode', 'set', 'userpofile');
             //echo gen_mess('replace', 'monitor', user_profile($_data));
             $data['mode']='galaxy';
