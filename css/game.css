@@ -18,7 +18,7 @@ body, html {
     color: #fffdd4;
     height: 70px;
     background: url('../images/menu_center.png') repeat-x;
-    font-size: 17px;
+    font-size: 16px;
 	}
 #mainmenu a{
 	color: #fffdd4;
@@ -34,7 +34,7 @@ body, html {
     height: 70px;
 	}
 #right_menu{
-	background: url('../images/menu_right.png') repeat-x; 
+	background: url('../images/menu_right.png') no-repeat; 
 	float: right;
 	margin-top: -95px;
 	margin-right: 29px;
@@ -44,12 +44,24 @@ body, html {
 	}
 #user_profile{
 	float: right;
+	}		
+#user_profile a{
+	text-decoration:underline;
 	}	
-	
-#user_profile a{text-decoration:underline;}	
-#exit a{color: #ea2424; text-decoration: none; border-bottom: 1px solid #ea2424;}
-#modemenu{color: #fff; margin-left: 35px; margin-top: -15px; margin-bottom: 15px;}
-#modemenu a{color: #fff;}
+#exit a{
+	color: #ea2424; 
+	text-decoration: none; 
+	border-bottom: 1px solid #ea2424;
+	}
+#modemenu{
+	color: #fff; 
+	margin-left: 35px; 
+	margin-top: -15px; 
+	margin-bottom: 15px;
+	}
+#modemenu a{
+	color: #fff;
+	}
 .smallotez {
 
     font-family: Helvetica;
