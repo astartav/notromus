@@ -15,14 +15,14 @@ body, html {
     width: 90%;
 	margin-top: 20px;
     padding-top: 25px;
-    color: #fffdd4;
+    color: #006dd4;
     height: 70px;
     background: url('../images/menu_center.png') repeat-x;
     font-size: 16px;
 	}
 #mainmenu a{
-	color: #fffdd4;
-    text-decoration: none;
+	color: #006dd4;
+  /*  text-decoration: none;*/
 	}
 #left_menu{
 	background: url('../images/menu_left.png') no-repeat; 
@@ -32,6 +32,7 @@ body, html {
 	padding-top: 25px; 
 	width: 20px;
     height: 70px;
+    border: 1px solid red;
 	}
 #right_menu{
 	background: url('../images/menu_right.png') no-repeat; 
@@ -41,6 +42,7 @@ body, html {
 	padding-top: 25px; 
 	width: 24px;
     height: 70px;
+    border: 1px solid orange;
 	}
 #user_profile{
 	float: right;
@@ -54,13 +56,14 @@ body, html {
 	border-bottom: 1px solid #ea2424;
 	}
 #modemenu{
-	color: #fff; 
-	margin-left: 35px; 
+    border: 1px solid red;
+	color: #006dd4;
+	margin-left: 35px;
 	margin-top: -15px; 
 	margin-bottom: 15px;
 	}
 #modemenu a{
-	color: #fff;
+	color: #006dd4;
 	}
 .smallotez {
 
@@ -115,7 +118,7 @@ body, html {
     top: 0px;
     height: 100%;
     width: 30%;
-	visibility: hidden;
+	/*visibility: hidden;*/
 }
 
 #debug p {
@@ -151,7 +154,7 @@ body, html {
 	width: 384px;
 }
 
-#menu, #controlbar   {
+#menu  {
 	position: relative;
 	float: left;
 	height: 20%;
@@ -172,12 +175,13 @@ body, html {
 	margin-bottom: 30px;
 	/*padding: 15px;*/
 	border: 1px solid #5c511d;
-
-	-moz-border-radius: 15px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+	/*-moz-border-radius: 15px;
 	-webkit-border-top-left-radius: 15px;
     -webkit-border-top-right-radius: 15px;
     -webkit-border-bottom-left-radius: 15px;
-    -webkit-border-bottom-right-radius: 15px;
+    -webkit-border-bottom-right-radius: 15px;*/
 
 }
 
@@ -189,16 +193,17 @@ body, html {
     overflow: auto;
     height: 15%;
 	width: 960px;
-    color: #00ff00;
+    color: #000099;
 	margin-left: 30px;
 	margin-bottom: 5px;
     background-color: white;
 	border: 1px solid #5c511d;
-	-moz-border-radius: 15px;
-	-webkit-border-top-left-radius: 15px;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+	/*-webkit-border-top-left-radius: 15px;
     -webkit-border-top-right-radius: 15px;
     -webkit-border-bottom-left-radius: 15px;
-    -webkit-border-bottom-right-radius: 15px;
+    -webkit-border-bottom-right-radius: 15px;*/
 }
 
 #chat_input {
@@ -207,15 +212,16 @@ body, html {
     padding: 0px;
     height: 5%;
     width: 910px;
-    color: #aaff00;
+    color: #000099;
     margin-left: 30px;
     background-color: white;
 	border: 1px solid #5c511d;
-	-moz-border-radius: 15px;
-	-webkit-border-top-left-radius: 15px;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+/*	-webkit-border-top-left-radius: 15px;
     -webkit-border-top-right-radius: 15px;
     -webkit-border-bottom-left-radius: 15px;
-    -webkit-border-bottom-right-radius: 15px;
+    -webkit-border-bottom-right-radius: 15px;*/
 }
 
 #chat_button {

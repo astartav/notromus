@@ -35,14 +35,6 @@ function send_mail(&$email_body) {
 }
 
 
-function game_control($param="") {
-    $out="<span> | </span>
-        <a href='#' onclick=\"sendi('flying','".$param."');\" >Полет</a><span> | </span>
-        <a href='#' onclick=\"sendi('fullinfo','".$param."');\" >Full Information</a><span> | </span>
-    ";
-    return $out;
-}
-
 function navigation_menu() {
     return "
         <a href='#' onclick=\"sendm('galaxy');\" >Галактика</a><span> | </span>
@@ -207,7 +199,7 @@ function battle_init_controller(&$data) {
        // gen_debug("current person:".$data['users'][0]['owned_person_id'],4);
         do_setperson_mode($data);
         echo gen_mess('mode', 'set', 'battle');
-        echo gen_mess('replace', 'controlbar', battle_menu());
+      //  echo gen_mess('replace', 'controlbar', battle_menu());
         echo gen_mess('replace', 'monitor', "<div id='map'></div>");//onmousedown=handleMouseDown(event,'map');
         if ( do_battle_ships($data) ) {
             gen_debug("processing battle..",4);
@@ -407,6 +399,8 @@ function location_init_controller(&$data) {
     $images_path="images/locations/";
     $mess="";
     gen_debug("selected location: ".$data['val_dec'],2);
+    $data['mode_menu']=array("назад"=>"sendm('galaxy');");
+    cmd_from_view($data, "mode_menu", "replace", "modemenu");
     echo gen_mess('mode', 'set', 'location');
     if (do_location($data) ) {
         echo gen_mess('replace', 'controlbar', '<span>|элементы управления локациями</span><span>|</span>');
@@ -432,8 +426,9 @@ function sector_init_controller(&$data) {
     $images_path="images/locations/";
     $mess="";
     if (do_locations($data) ) {
-        echo gen_mess('replace', 'controlbar', game_control(code_id($data['val_dec'])));
         echo gen_mess('replace', 'monitor', "<div id='map'></div>");
+        $data['mode_menu']=array("назад"=>"sendm('galaxy');");
+        cmd_from_view($data, "mode_menu", "replace", "modemenu");
         //$mess="<pp pn='ppic'>".$images_path."sector_background.png"."</pp>";
         $mess="<pp pn='ppic'>images/sectors/".$data['locations'][0]['sector_background']."</pp>";
         echo gen_multi_mess('setpp', 'monitor', $mess);
@@ -459,8 +454,9 @@ function system_init_controller(&$data) {
     $mess="";
     if ( do_person($data) && do_sectors($data) ) {
         gen_debug("__person:".$data['person'][0]['person sector_id'],2);
-        echo gen_mess('replace', 'controlbar', game_control(code_id($data['val_dec'])));
         echo gen_mess('replace', 'monitor', "<div id='map'></div>");
+        $data['mode_menu']=array("назад"=>"sendm('galaxy');");
+        cmd_from_view($data, "mode_menu", "replace", "modemenu");
         $mess="<pp pn='ppic'>images/systems/".$data['sectors'][0]['system_background']."</pp>";
         echo gen_multi_mess('setpp', 'monitor', $mess);
         echo gen_mess('mode', 'set', 'system');
@@ -491,10 +487,12 @@ function galaxy_init_controller(&$data) {
         //foreach ($data['person'] as $e) {
          //   gen_debug("sample:".$e['owner_system_id'].", ".$e['person_id'],4);
         //}
-
         gen_debug("location system_id:".$data['person'][0]['owner_system_id'],2);
        // echo gen_mess('replace', 'controlbar', '<span>|</span><span>элементы управления галактикой... не предусмотрено!</span><span>|</span>');
         echo gen_mess('replace', 'monitor', "<div id='map'></div>");
+        //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
+        echo gen_mess('replace', 'modemenu',"<span \>");
+
         $mess="<pp pn='ppic'>images/galaxy/galaxy_background.png"."</pp>";
         echo gen_multi_mess('setpp', 'monitor', $mess);
         echo gen_mess('mode', 'set', 'galaxy');
@@ -520,9 +518,9 @@ function galaxy_init_controller(&$data) {
       }
     } else {
         // possible personage dosn't exists... navigate to person mode
-        $_data['mode']='person';
-        $_data['cmd']='init';
-        cmd_sink($_data);
+        $data['mode']='person';
+        $data['cmd']='init';
+        cmd_sink($data);
     }
 }
 
@@ -553,15 +551,15 @@ function galaxy_mouse_controller(&$data) {
 }*/
 
 
-function login_controller(&$_data) {
-    if(check_login($_data)) {
-        gen_debug('login successfully:'.$_data['user'][0]['user_login'],4);
-        cmd_from_view($_data, 'game_structure', 'replace', 'main');
+function login_controller(&$data) {
+    if(check_login($data)) {
+        gen_debug('login successfully:'.$data['user'][0]['user_login'],4);
+        cmd_from_view($data, 'game_structure', 'replace', 'main');
         echo gen_mess('mode', 'set', 'galaxy');
         echo gen_mess('replace', 'monitor', "<div id=map></div>");
-        $_data['mode']='galaxy';
-        $_data['cmd']='init';
-        cmd_sink($_data);
+        $data['mode']='galaxy';
+        $data['cmd']='init';
+        cmd_sink($data);
     } else {
         gen_debug('login fails',2);
         //
@@ -569,23 +567,23 @@ function login_controller(&$_data) {
     }
 }
 
-function registry_controller(&$_data) {
-    if(     $_data['login']!="" &&
-            $_data['password1']!="" &&
-            $_data['password1'] == $_data['password2'] &&
-            $_data['email']!="") {
-        if( do_registry($_data) ) {
-            $mess=array(    'to'=>$_data['email'],
+function registry_controller(&$data) {
+    if(     $data['login']!="" &&
+            $data['password1']!="" &&
+            $data['password1'] == $data['password2'] &&
+            $data['email']!="") {
+        if( do_registry($data) ) {
+            $mess=array(    'to'=>$data['email'],
                             'subj'=>"Регистрация в игре",
                             'mess'=>"Привет!\n\nВы успешно зарегились в игрухе.\n\nАдминистрация");
             if ( send_mail($mess) ){
-                echo gen_mess('replace', 'main', game_structure($_data['login']));
+                echo gen_mess('replace', 'main', game_structure($data['login']));
                 echo gen_mess('mode', 'set', 'userpofile');
-                $_data['user'][0]['user_login'] = $_data['login'];
-                $_data['user'][0]['user_password'] = $_data['password1'];
-                $_data['user'][0]['user_email'] = $_data['email'];
-                $_data['user'][0]['user_avatar'] = "test_avatar.jpg";
-                echo gen_mess('replace', 'monitor', user_profile($_data));
+                $data['user'][0]['user_login'] = $data['login'];
+                $data['user'][0]['user_password'] = $data['password1'];
+                $data['user'][0]['user_email'] = $data['email'];
+                $data['user'][0]['user_avatar'] = "test_avatar.jpg";
+                echo gen_mess('replace', 'monitor', user_profile($data));
                 return true;
             }
         }
@@ -595,17 +593,17 @@ function registry_controller(&$_data) {
     return false;
 }
 
-function reminder_controller(&$_data) {
-    gen_debug('reminder_controller:'.$_data['email'],4);
-    if( do_reminder($_data) ) {
-        gen_debug('reminder_controller2:'.$_data['reminder'][0]['user_login'].", ".$_data['reminder'][0]['user_password'],5);
+function reminder_controller(&$data) {
+    gen_debug('reminder_controller:'.$data['email'],4);
+    if( do_reminder($data) ) {
+        gen_debug('reminder_controller2:'.$data['reminder'][0]['user_login'].", ".$data['reminder'][0]['user_password'],5);
 
-        if( $_data['reminder'][0]['user_login'] !="" && $_data['reminder'][0]['user_password'] !="" ) {
+        if( $data['reminder'][0]['user_login'] !="" && $data['reminder'][0]['user_password'] !="" ) {
 
             $mess=array(
-                'to'=>$_data['email'],
+                'to'=>$data['email'],
                 'subj'=>"напоминание акаунта к игре",
-                'mess'=>"Привет!\nВы забыли логин или пароль!\nлогин:".$_data['reminder'][0]['user_login']."\nпароль:".$_data['reminder'][0]['user_password']."\n\nАдминистрация"
+                'mess'=>"Привет!\nВы забыли логин или пароль!\nлогин:".$data['reminder'][0]['user_login']."\nпароль:".$data['reminder'][0]['user_password']."\n\nАдминистрация"
             );
             if ( send_mail($mess) ) {
                 return true;
@@ -616,7 +614,7 @@ function reminder_controller(&$_data) {
     return false;
 }
 
-function update_userprofile(&$_data){
+function update_userprofile(&$data){
     gen_debug('userprofile update: not implemented',2);
 }
 
@@ -624,12 +622,12 @@ function encyclopedia_controller(&$data) {
     gen_debug('encyclopedia: not implemented',2);
 }
 
-function check_session(&$_data) {
+function check_session(&$data) {
     global $link;
-    if(isset($_data['session']) && $_data['session']!="") {
-        $query="select * from users where session='".$_data['session']."'";
-        if ( mysql_ask($_data['user'],$query) ) {
-            $query="update users set session_timestamp=".$_data['stamp']." where session='".$_data['session']."'";
+    if(isset($data['session']) && $data['session']!="") {
+        $query="select * from users where session='".$data['session']."'";
+        if ( mysql_ask($data['user'],$query) ) {
+            $query="update users set session_timestamp=".$data['stamp']." where session='".$data['session']."'";
             gen_debug('operator updating successfull',5);
             return mysql_update($query);
         }
@@ -637,58 +635,58 @@ function check_session(&$_data) {
     return false;
 }
 
-function check_login(&$_data) {
+function check_login(&$data) {
     global $link;
-    $query="select user_id, user_login, user_mode, user_avatar, owned_person_id from users where user_login='".$_data['login']."' and user_password='".$_data['password']."'";
+    $query="select user_id, user_login, user_mode, user_avatar, owned_person_id from users where user_login='".$data['login']."' and user_password='".$data['password']."'";
     gen_debug($query,5);
-    if ( mysql_ask($_data['user'],$query) ) {
-        $query="update users set session='".$_data['session']."', session_timestamp=".$_data['stamp']."  where user_login='".$_data['login']."' and user_password='".$_data['password']."'";
+    if ( mysql_ask($data['user'],$query) ) {
+        $query="update users set session='".$data['session']."', session_timestamp=".$data['stamp']."  where user_login='".$data['login']."' and user_password='".$data['password']."'";
         return mysql_update($query);
     }
     return false;
 }
 
 // потенциально кривое решение !!! надо либо транзакцию добавить либо делать id такой же как и юзер id.
-function do_addperson(&$_data) {
-    $query="insert into persons values (NULL,'".$_data['person_name']."',1,9,1,'persons/guest.png','".$_data['person_description']."',0,0,0,0,".$_data['person_fraction'].")";
+function do_addperson(&$data) {
+    $query="insert into persons values (NULL,'".$data['person_name']."',1,9,1,'persons/guest.png','".$data['person_description']."',0,0,0,0,".$data['person_fraction'].")";
     gen_debug("do_addperson_1:".$query,5);
     if ( mysql_add($query) ) {
-        $_data['user'][0]['owned_person_id']=mysql_insert_id();
-        $query="update users set owned_person_id=".$_data['user'][0]['owned_person_id']." where user_id=".$_data['user'][0]['user_id'];
+        $data['user'][0]['owned_person_id']=mysql_insert_id();
+        $query="update users set owned_person_id=".$data['user'][0]['owned_person_id']." where user_id=".$data['user'][0]['user_id'];
         gen_debug("do_addperson_2:".$query,5);
         $res=mysql_update($query);
         if(!$res) {
-            $_data['user'][0]['owned_person_id']=NULL;
+            $data['user'][0]['owned_person_id']=NULL;
         }
         return $res;
     }
     return false;
 }
 
-function do_setperson_mode(&$_data) {
-    gen_debug("person mode - set to:".$_data['persons'][0]['person_mode'],4);
-    $query="update persons set person_mode=".$_data['persons'][0]['person_mode']." where person_id=".$_data['user'][0]['owned_person_id'];
+function do_setperson_mode(&$data) {
+    gen_debug("person mode - set to:".$data['persons'][0]['person_mode'],4);
+    $query="update persons set person_mode=".$data['persons'][0]['person_mode']." where person_id=".$data['user'][0]['owned_person_id'];
     gen_debug($query,5);
     return mysql_update($query);
 }
 
-function do_battle_ships(&$_data) {
+function do_battle_ships(&$data) {
     $query="select ships.* from ships, persons where persons.person_mode=3";
     //and ships.owner_person_id=persons.person_id";
     gen_debug($query,5);
-    return mysql_ask($_data['ships'],$query);
+    return mysql_ask($data['ships'],$query);
 }
 
 // to join with do_ssector_flying in the future
-function do_system_flying(&$_data) {
+function do_system_flying(&$data) {
     gen_debug("subsystem flying",4);
-    $query="select sector_id from sectors where owner_system_id=".$_data['val_dec'];
+    $query="select sector_id from sectors where owner_system_id=".$data['val_dec'];
     gen_debug($query,5);
-    if(isset($_data['sectors'])) {
-        unset($_data['sectors']);
+    if(isset($data['sectors'])) {
+        unset($data['sectors']);
     }
-    if(mysql_ask($_data['sectors'],$query)) {
-        $query="update persons set person_sector_id=".$_data['sectors'][0]['sector_id']." where person_id=".$_data['user'][0]['owned_person_id'];
+    if(mysql_ask($data['sectors'],$query)) {
+        $query="update persons set person_sector_id=".$data['sectors'][0]['sector_id']." where person_id=".$data['user'][0]['owned_person_id'];
         gen_debug($query,5);
         return mysql_update($query);
     }
@@ -696,119 +694,119 @@ function do_system_flying(&$_data) {
 }
 
 // to join with do_system_flying in the future
-function do_sector_flying(&$_data) {
+function do_sector_flying(&$data) {
     gen_debug("subsector flying",4);
-    $query="select sector_id from sectors where sector_id=".$_data['val_dec'];
+    $query="select sector_id from sectors where sector_id=".$data['val_dec'];
     gen_debug($query,5);
-    if(isset($_data['sectors'])) {
-        unset($_data['sectors']);
+    if(isset($data['sectors'])) {
+        unset($data['sectors']);
     }
-    if(mysql_ask($_data['sectors'],$query)) {
-        $query="update persons set person_sector_id=".$_data['sectors'][0]['sector_id']." where person_id=".$_data['user'][0]['owned_person_id'];
+    if(mysql_ask($data['sectors'],$query)) {
+        $query="update persons set person_sector_id=".$data['sectors'][0]['sector_id']." where person_id=".$data['user'][0]['owned_person_id'];
         gen_debug($query,5);
         return mysql_update($query);
     }
     return false;
 }
 
-function do_person(&$_data) {
-    //$query="select * from persons where person_id=".$_data['user'][0]['owned_person_id'];
-    if(isset($_data['person'])) {
-        unset($_data['person']);
+function do_person(&$data) {
+    //$query="select * from persons where person_id=".$data['user'][0]['owned_person_id'];
+    if(isset($data['person'])) {
+        unset($data['person']);
     }
     $query="select persons.*, sectors.owner_system_id from sectors, persons where
-        persons.person_id=".$_data['user'][0]['owned_person_id']." and
+        persons.person_id=".$data['user'][0]['owned_person_id']." and
         sectors.sector_id=persons.person_sector_id";
     gen_debug($query,5);
-    return mysql_ask($_data['person'],$query);
+    return mysql_ask($data['person'],$query);
 }
 
-//function do_person_location(&$_data) {
-//    $query="select sectors.owner_system_id from sectors,persons where persons.person_id=".$_data['person'][0]['person_id']." and sectors.sector_id=".$_data['person'][0]['person_sector_id'];
+//function do_person_location(&$data) {
+//    $query="select sectors.owner_system_id from sectors,persons where persons.person_id=".$data['person'][0]['person_id']." and sectors.sector_id=".$data['person'][0]['person_sector_id'];
 //    gen_debug($query,5);
-//    return mysql_ask($_data['person'],$query);
+//    return mysql_ask($data['person'],$query);
 /////}
 
-function do_inventories(&$_data) {
-    $query="select * from inventories where owner_ship_id=".$_data['ship'][0]['ship_id'];
+function do_inventories(&$data) {
+    $query="select * from inventories where owner_ship_id=".$data['ship'][0]['ship_id'];
     gen_debug($query,5);
-    return mysql_ask($_data['inventories'],$query);
+    return mysql_ask($data['inventories'],$query);
 }
 
 
-function do_ship(&$_data) {
-    $query="select * from ships where owner_person_id=".$_data['user'][0]['owned_person_id'];
+function do_ship(&$data) {
+    $query="select * from ships where owner_person_id=".$data['user'][0]['owned_person_id'];
     gen_debug($query,5);
-    return mysql_ask($_data['ship'],$query);
+    return mysql_ask($data['ship'],$query);
 }
 
-function do_systems(&$_data) {
+function do_systems(&$data) {
     $query="select * from systems";
-    if(isset($_data['systems'])) {
-        unset($_data['systems']);
+    if(isset($data['systems'])) {
+        unset($data['systems']);
     }
     gen_debug($query,5);
-    return mysql_ask($_data['systems'],$query);
+    return mysql_ask($data['systems'],$query);
 }
 
-function do_location(&$_data) {
-    $query="select * from locations where location_id=".$_data['val_dec'];
+function do_location(&$data) {
+    $query="select * from locations where location_id=".$data['val_dec'];
     gen_debug($query,5);
-    return mysql_ask($_data['location'],$query);
+    return mysql_ask($data['location'],$query);
 }
 
-function do_locations(&$_data) {
-    $query="select locations.*,sectors.sector_background from locations,sectors where locations.owner_sector_id=".$_data['val_dec']. " and sectors.sector_id=".$_data['val_dec'];
+function do_locations(&$data) {
+    $query="select locations.*,sectors.sector_background from locations,sectors where locations.owner_sector_id=".$data['val_dec']. " and sectors.sector_id=".$data['val_dec'];
     gen_debug("!!!".$query,5);
-    return mysql_ask($_data['locations'],$query);
+    return mysql_ask($data['locations'],$query);
 }
 
-function do_sectors(&$_data) {
-    $query="select sectors.*,systems.system_background from sectors,systems where sectors.owner_system_id=".$_data['val_dec']." and systems.system_id=".$_data['val_dec'];
+function do_sectors(&$data) {
+    $query="select sectors.*,systems.system_background from sectors,systems where sectors.owner_system_id=".$data['val_dec']." and systems.system_id=".$data['val_dec'];
     gen_debug($query,5);
-    return mysql_ask($_data['sectors'],$query);
+    return mysql_ask($data['sectors'],$query);
 }
 
-function do_addchat(&$_data) {
+function do_addchat(&$data) {
     global $link;
         //$t=gettime();
         gen_debug('do_addchat, stamp:'.$t,4);
-        $query="insert into chat_messages values (NULL, 0, 0,'".$_data['chat_message']."',".gettime().",".$_data['user'][0]['owned_person_id'].")";
+        $query="insert into chat_messages values (NULL, 0, 0,'".$data['chat_message']."',".gettime().",".$data['user'][0]['owned_person_id'].")";
         gen_debug($query,5);
         return mysql_add($query);
 }
 
-function do_getchat(&$_data){
+function do_getchat(&$data){
     gen_debug('do_getchat',4);
- //   if( !isset($_data['chat_message_id'])) {
-//        $_data['chat_message_id']=0;
+ //   if( !isset($data['chat_message_id'])) {
+//        $data['chat_message_id']=0;
  //   }
-    $query="select c.message_id, p.person_name, c.message_timestamp, c.message_text from chat_messages as c,persons as p where c.message_id>".$_data['chat_message_id']." and c.message_author_id=p.person_id";
+    $query="select c.message_id, p.person_name, c.message_timestamp, c.message_text from chat_messages as c,persons as p where c.message_id>".$data['chat_message_id']." and c.message_author_id=p.person_id";
     gen_debug($query,5);
-    return mysql_ask($_data['chat'],$query);
+    return mysql_ask($data['chat'],$query);
 }
 
-function do_registry(&$_data) {
+function do_registry(&$data) {
     global $link;
     gen_debug('do registry starting',5);
-    $query="select user_login, user_email from users where user_login='".$_data['login']."' or user_email='".$_data['email']."'";
-    $res=mysql_ask($_data['temp_user'],$query);
+    $query="select user_login, user_email from users where user_login='".$data['login']."' or user_email='".$data['email']."'";
+    $res=mysql_ask($data['temp_user'],$query);
     if(!$res) {
-        $query="insert into users values (NULL, '".$_data['login']."','".$_data['password1']."','".$_data['email']."','test_avatar.jpg',
-            '".$_data['session']."', ".$_data['stamp'].",NULL,1)";
+        $query="insert into users values (NULL, '".$data['login']."','".$data['password1']."','".$data['email']."','test_avatar.jpg',
+            '".$data['session']."', ".$data['stamp'].",NULL,1)";
         return mysql_add($query);
     }
     return false;
 }
 
-function do_reminder(&$_data) {
+function do_reminder(&$data) {
     global $link;
-    $query="select user_login, user_password from users where user_email='".$_data['email']."'";
-    return mysql_ask($_data['reminder'],$query);
+    $query="select user_login, user_password from users where user_email='".$data['email']."'";
+    return mysql_ask($data['reminder'],$query);
 }
 
-function do_logout($_data) {
-    $query="update users set session='".md5(microtime())."', session_timestamp=".$_data['stamp']." where session='".$_data['session']."'";
+function do_logout($data) {
+    $query="update users set session='".md5(microtime())."', session_timestamp=".$data['stamp']." where session='".$data['session']."'";
     gen_debug($query,5);
     return mysql_update($query);
 }
@@ -1094,10 +1092,10 @@ function cmd_sink(&$data) {
             }
             break;
         default:
-            cmd_from_view($_data, 'game_structure', 'replace', 'main');
-            //echo gen_mess('replace', 'main', game_structure($_data['user'][0]['user_login']));
+            cmd_from_view($data, 'game_structure', 'replace', 'main');
+            //echo gen_mess('replace', 'main', game_structure($data['user'][0]['user_login']));
             //echo gen_mess('mode', 'set', 'userpofile');
-            //echo gen_mess('replace', 'monitor', user_profile($_data));
+            //echo gen_mess('replace', 'monitor', user_profile($data));
             $data['mode']='galaxy';
             $data['cmd']='init';
             cmd_sink($data);
