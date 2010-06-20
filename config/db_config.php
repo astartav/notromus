@@ -28,9 +28,9 @@ $link=NULL;
 //    $project_name = $_POST['project_name'];
 //}
 
-if( @file_exists( "../base_model.php")) {
-    include_once "../base_model.php";
-} else gen_debug('base_model.php fails',2);
+if( @file_exists( "../base.php")) {
+    include_once "../base.php";
+} else echo "<p>base.php fails</p>";
 
 //echo "<h2>".$db_host.", ".$db_name.", ".$db_root_user.", ".$db_root_password."</h2>";
 

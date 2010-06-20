@@ -1,9 +1,6 @@
-<div id='modemenu'>
-    <span> | </span>
+<span> | </span>
     <?php
-        $menus=array("стоять", "сидеть", "лежать", "к ноге");
-        foreach($menus as  $menu) {
-            echo "<a href='#'>".$menu."</a><span> | </span>";
+        foreach($data['mode_menu'] as $name=>$action) {
+            echo "<a href='#' onclick=\"".$action."\">".$name."</a><span> | </span>";
         }
     ?>
-</div>
