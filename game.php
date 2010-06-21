@@ -212,7 +212,7 @@ function battle_init_controller(&$data) {
                 $mess.= "<pp pn='py'>".$ship['ship_ycoord']."</pp>";
                 $mess.= "<pp pn='ppic'>".$images_path."ship_".$ship['ship_type_id'].".png</pp>";
                 
-                $mess.= "<pp pn='pd'>корабль ".$ship['ship_name']."</pp>";
+                $mess.= "<pp pn='pd'http://is-nn.ru>корабль ".$ship['ship_name']."</pp>";
                 $mess.= "<pp pn='ps'>".$size."</pp>";
                 gen_debug("shipowner:".$ship['owner_person_id'].", current person:".$data['user'][0]['owned_person_id'],4);
                 if($ship['owner_person_id'] == $data['user'][0]['owned_person_id']) {
@@ -365,13 +365,21 @@ function gnavi_select_controller(&$data) {
 }
 
 function person_init_controller(&$data) {
-    echo gen_multi_mess('setpp', 'monitor', "<pp pn='ppic'>none</pp>");
+    //echo gen_multi_mess('setpp', 'monitor', "<pp pn='ppic'>none</pp>");
+    //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
+    cmd_from_view($data, "navigation", "replace", "monitor");
+
     echo gen_mess('mode', 'set', 'person');
     if ( do_person($data) ) {
         echo gen_mess('replace', 'monitor', game_person($data['person'][0]));
     } else {
         echo gen_mess('replace', 'monitor', game_new_person());
     }
+}
+
+function user_profile_controller($data) {
+    echo gen_mess('mode', 'set', 'userprofile');
+    cmd_from_view($data, "change_user", "replace", "modearea");
 }
 
 function system_fly_controller(&$data){
@@ -399,8 +407,11 @@ function location_init_controller(&$data) {
     $images_path="images/locations/";
     $mess="";
     gen_debug("selected location: ".$data['val_dec'],2);
+
+    //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
+    //cmd_from_view($data, "mode_menu", "replace", "modemenu");
     $data['mode_menu']=array("назад"=>"sendm('galaxy');");
-    cmd_from_view($data, "mode_menu", "replace", "modemenu");
+    cmd_from_view($data, "navigation", "replace", "monitor");
     echo gen_mess('mode', 'set', 'location');
     if (do_location($data) ) {
         echo gen_mess('replace', 'controlbar', '<span>|элементы управления локациями</span><span>|</span>');
@@ -426,9 +437,11 @@ function sector_init_controller(&$data) {
     $images_path="images/locations/";
     $mess="";
     if (do_locations($data) ) {
-        echo gen_mess('replace', 'monitor', "<div id='map'></div>");
         $data['mode_menu']=array("назад"=>"sendm('galaxy');");
-        cmd_from_view($data, "mode_menu", "replace", "modemenu");
+        cmd_from_view($data, "navigation", "replace", "monitor");
+        //echo gen_mess('replace', 'monitor', "<div id='map'></div>");
+        //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
+        //cmd_from_view($data, "mode_menu", "replace", "modemenu");
         //$mess="<pp pn='ppic'>".$images_path."sector_background.png"."</pp>";
         $mess="<pp pn='ppic'>images/sectors/".$data['locations'][0]['sector_background']."</pp>";
         echo gen_multi_mess('setpp', 'monitor', $mess);
@@ -454,9 +467,12 @@ function system_init_controller(&$data) {
     $mess="";
     if ( do_person($data) && do_sectors($data) ) {
         gen_debug("__person:".$data['person'][0]['person sector_id'],2);
-        echo gen_mess('replace', 'monitor', "<div id='map'></div>");
         $data['mode_menu']=array("назад"=>"sendm('galaxy');");
-        cmd_from_view($data, "mode_menu", "replace", "modemenu");
+        cmd_from_view($data, "navigation", "replace", "monitor");
+        //echo gen_mess('replace', 'monitor', "<div id='map'></div>");
+        //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
+        //cmd_from_view($data, "mode_menu", "replace", "modemenu");
+
         $mess="<pp pn='ppic'>images/systems/".$data['sectors'][0]['system_background']."</pp>";
         echo gen_multi_mess('setpp', 'monitor', $mess);
         echo gen_mess('mode', 'set', 'system');
@@ -489,12 +505,19 @@ function galaxy_init_controller(&$data) {
         //}
         gen_debug("location system_id:".$data['person'][0]['owner_system_id'],2);
        // echo gen_mess('replace', 'controlbar', '<span>|</span><span>элементы управления галактикой... не предусмотрено!</span><span>|</span>');
-        echo gen_mess('replace', 'monitor', "<div id='map'></div>");
+
+        //echo gen_mess('replace', 'monitor', "<div id='map'></div>");
         //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
-        echo gen_mess('replace', 'modemenu',"<span \>");
+        //echo gen_mess('replace', 'modemenu',"<span />");
+
+        $data['mode_menu']=array("назад"=>"sendm('galaxy');");
+        cmd_from_view($data, "galaxy_navigation", "replace", "modearea");
+        //cmd_from_view($data, "navigation", "replace", "monitor");
 
         $mess="<pp pn='ppic'>images/galaxy/galaxy_background.png"."</pp>";
         echo gen_multi_mess('setpp', 'monitor', $mess);
+
+        
         echo gen_mess('mode', 'set', 'galaxy');
         foreach($data['systems'] as $obj) {
             $mess="";
@@ -556,7 +579,7 @@ function login_controller(&$data) {
         gen_debug('login successfully:'.$data['user'][0]['user_login'],4);
         cmd_from_view($data, 'game_structure', 'replace', 'main');
         echo gen_mess('mode', 'set', 'galaxy');
-        echo gen_mess('replace', 'monitor', "<div id=map></div>");
+      //  echo gen_mess('replace', 'monitor', "<div id=map></div>");
         $data['mode']='galaxy';
         $data['cmd']='init';
         cmd_sink($data);
@@ -583,7 +606,11 @@ function registry_controller(&$data) {
                 $data['user'][0]['user_password'] = $data['password1'];
                 $data['user'][0]['user_email'] = $data['email'];
                 $data['user'][0]['user_avatar'] = "test_avatar.jpg";
-                echo gen_mess('replace', 'monitor', user_profile($data));
+                $data['mode']='userprofile';
+                $data['cmd']='init';
+                cmd_sink($data);
+
+                //echo gen_mess('replace', 'monitor', user_profile($data));
                 return true;
             }
         }
@@ -660,9 +687,6 @@ function do_registry(&$data) {
 }
 
 
-function round_process($data) {
-}
-
 function cmd_sink(&$data) {
     switch($data['mode']) {
         case 'logout':
@@ -720,7 +744,7 @@ function cmd_sink(&$data) {
                     break;
                 case 'init':
                 default:
-                    battle_init_controller($data);
+                    //battle_init_controller($data);
                     break;
             }
             break;
@@ -756,7 +780,9 @@ function cmd_sink(&$data) {
                     break;
                 case 'init':
                 default:
-                    echo gen_mess('replace', 'monitor', user_profile($data));
+                    user_profile_controller($data);
+                    //cmd_from_view($data, 'change_user', 'replace', 'monitor');
+                    //echo gen_mess('replace', 'monitor', user_profile($data));
                     break;
             }
             break;
@@ -1004,6 +1030,10 @@ if( @file_exists( "./base.php")) {
     include_once "./base.php";
 } else gen_debug('base.php fails',2);
 
+if( @file_exists( "./model.php")) {
+    include_once "./model.php";
+} else gen_debug('model.php fails',2);
+
 gen_debug('start processing');
 
 if(connect($db_host, $db_name, $db_user, $db_password)) {
@@ -1016,9 +1046,7 @@ if(connect($db_host, $db_name, $db_user, $db_password)) {
 
             gen_debug('session successfully...',4);
 
-            if( @file_exists( "./model.php")) {
-                include_once "./model.php";
-            } else gen_debug('base.php fails',2);
+            
 
             $data['val_dec']=decode_id($data['val']);
             cmd_sink($data);

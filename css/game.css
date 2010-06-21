@@ -147,12 +147,13 @@ body, html {
 	background: #fffaaa;
 }
 
+/*
 #controlarea {
 	position: relative;
 	float: left;
 	height: 480px;
 	width: 384px;
-}
+}*/
 
 #menu  {
 	position: relative;
@@ -163,6 +164,13 @@ body, html {
 	border: 1px #ff0000 solid;
 }
 
+#modearea {
+    float: left;
+    position: relative;
+    margin-left: 33px;
+	margin-bottom: 30px;
+}
+
 #monitor {
     float: left;
     color: #4a4a4a;
@@ -171,18 +179,18 @@ body, html {
     width: 640px;
     position: relative;
 
-	margin-left: 33px;
-	margin-bottom: 30px;
+	/*margin-left: 33px;
+	margin-bottom: 30px;*/
 	/*padding: 15px;*/
 	border: 1px solid #5c511d;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-	/*-moz-border-radius: 15px;
-	-webkit-border-top-left-radius: 15px;
-    -webkit-border-top-right-radius: 15px;
-    -webkit-border-bottom-left-radius: 15px;
-    -webkit-border-bottom-right-radius: 15px;*/
+}
 
+#info {
+    float: left;
+    position: relative;
+    width: 384px;
 }
 
 #chat_monitor  {
@@ -200,10 +208,6 @@ body, html {
 	border: 1px solid #5c511d;
 	-moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-	/*-webkit-border-top-left-radius: 15px;
-    -webkit-border-top-right-radius: 15px;
-    -webkit-border-bottom-left-radius: 15px;
-    -webkit-border-bottom-right-radius: 15px;*/
 }
 
 #chat_input {
@@ -218,10 +222,6 @@ body, html {
 	border: 1px solid #5c511d;
 	-moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-/*	-webkit-border-top-left-radius: 15px;
-    -webkit-border-top-right-radius: 15px;
-    -webkit-border-bottom-left-radius: 15px;
-    -webkit-border-bottom-right-radius: 15px;*/
 }
 
 #chat_button {
@@ -259,7 +259,7 @@ span.mes {
     margin-left: 5px;
 }
 
-#info {
+/*#info {
 	position: relative;
     float: left;
     margin: 0;
@@ -270,7 +270,7 @@ span.mes {
     color: red;
     background-color: black;
 	border: 1px red solid;
-}
+}*/
 
 #nav_controls {
     float: left;
