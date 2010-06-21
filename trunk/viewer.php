@@ -20,6 +20,9 @@ function preparedata(&$data,$viewname) {
 
     
     switch($viewname) {
+        case 'galaxy_navigation_page':
+            $data['mode_menu']=array("назад"=>"alert('нельзя... позади москва!');");
+            break;
         case 'show_user_profile':
             $data['person']['fraction_id']='1';
             $data['person']['name']='имя персонажа';
@@ -65,6 +68,7 @@ function preparedata(&$data,$viewname) {
 
 
     $view_templates=array(
+        'galaxy_navigation_page'=>array('galaxy_navigation_page'),
         'guest_login'=>array('guest_login'),
         'game_structure'=>array('game_structure'),
         'guest_remind'=>array('guest_remind'),
