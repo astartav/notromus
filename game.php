@@ -44,105 +44,6 @@ function navigation_menu() {
         ";
 }
 
-function game_new_person() {
-
-  /*  $out="
-        <h2>Персонаж - выбор персонажа</h2>
-        <form>
-        фракция:<br>
-        <input name='fraction' id='fraction' type='hidden' value='' \>
-        <select size='3' onchange=\"this.form.fraction.value=this.selectedIndex;\" >
-            <option value='0'>Биониды</option>
-            <option value='1'>Культ машин</option>
-            <option value='2'>Инквизиторы</option>
-        </select><br>
-        имя персонажа:<br>
-        <input name='name' id='name' type='text'\><br>
-        описание:<br>
-        <input name='description' id='description' type='text'\><br>
-        <br>
-        <input type='button' value='создать персонаж' onclick=\"sendw('addnew','name;fraction;description');\" \>
-        </form>
-        ";*/
-    return $out;
-}
-
-function game_person(&$data) {
-    $fraction=array('Биониды','Культ машин','Инквизиторы');
-    $status=array('offline','online');
- /*   $out="
-        <h2>Персонаж - просмотр характеристик</h2>
-        <form>
-        фракция: ".$fraction[$data['person_fraction_id']]."<br>
-        имя персонажа:".$data['person_name']."<br>
-        описание:".$data['person_description']."<br>
-        денежный счет:".$data['person_account']."<br>
-        игровые очки:".$data['person_score']."<br>
-        статус:".$status[$data['person_status']]."<br>
-        игровой опыт:".$data['person_experience']."<br>
-        ранг:".$data['person_rang']."<br>
-        </form>
-        ";*/
-    return $out;
-}
-
-function game_maintenance_depot(&$data) {
-    $out="
-        <h2>Ремонтная база</h2>
-        <h5>кстати тут не работает ничего</h5>
-        <form>
-        <input name='service_type' id='service_type' type='hidden' value='' \>
-        <select size='10' onchange=\"this.form.service_type.value=this.selectedIndex;\" >
-            <option value='0'>Покраска мультиустойчивым покрытием</option>
-            <option value='1'>Рихтовка метеоритных отбойников</option>
-            <option value='2'>Широкоспектральное тонирование иллюминаторов</option>
-
-            <option value='3'>Замена маршевого двигателя</option>
-            <option value='4'>Заправка</option>
-        </select>
-        <input type='button' value='купить' onclick=\"sendw('service','service_type');\" \><br>
-        </form>
-        ";
-    return $out;
-}
-
-function game_market(&$data) {
-    $out="
-        <h2>Рынок - купля-продажа</h2>
-        <h5>кстати тут не работает ничего</h5>
-        <form>
-        <input name='product_list' id='product_list' type='hidden' value='' \>
-        <table border=0>
-        <tr>
-            <td>
-            <select size='10' onchange=\"this.form.product_list.value=this.selectedIndex;\" >
-                <option value='0'>Хлам железный</option>
-                <option value='1'>Небольшой корабль</option>
-                <option value='2'>Пища</option>
-            </select>
-            </td>
-
-            <td>
-            <select size='10' onchange=\"this.form.product_list.value=this.selectedIndex;\" >
-                <option value='0'>Движок</option>
-                <option value='1'>Небольшой корабль</option>
-                <option value='2'>Пища</option>
-            </select>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type='button' value='продать' onclick=\"sendw('sell','product_list');\" \><br>
-            </td>
-            <td>
-                <input type='button' value='купить' onclick=\"sendw('buy','product_list');\" \><br>
-            </td>
-        </tr>
-        </form>
-        ";
-    return $out;
-}
-
 function game_ship() {
     $out="
     <div style='position:relative'>
@@ -367,13 +268,16 @@ function gnavi_select_controller(&$data) {
 function person_init_controller(&$data) {
     //echo gen_multi_mess('setpp', 'monitor', "<pp pn='ppic'>none</pp>");
     //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
-    cmd_from_view($data, "navigation", "replace", "monitor");
+    //cmd_from_view($data, "show_person", "replace", "modearea");
 
     echo gen_mess('mode', 'set', 'person');
     if ( do_person($data) ) {
-        echo gen_mess('replace', 'monitor', game_person($data['person'][0]));
+        cmd_from_view($data, "show_person", "replace", "modearea");
+        //echo gen_mess('replace', 'monitor', game_person($data['person'][0]));
+
     } else {
-        echo gen_mess('replace', 'monitor', game_new_person());
+        cmd_from_view($data, "create_person", "replace", "modearea");
+        //echo gen_mess('replace', 'monitor', game_new_person());
     }
 }
 
@@ -417,12 +321,15 @@ function location_init_controller(&$data) {
         echo gen_mess('replace', 'controlbar', '<span>|элементы управления локациями</span><span>|</span>');
         switch($data['location'][0]['location_type']) {
             case 2: //market
-                echo gen_mess('replace', 'monitor', game_market());
+                //echo gen_mess('replace', 'monitor', game_market());
+                //echo gen_mess('replace', 'monitor', game_market());
+                cmd_from_view($data, 'market', 'replace', 'modearea');
                 $mess="<pp pn='ppic'>".$images_path."market_.png"."</pp>";
                 echo gen_multi_mess('setpp', 'monitor', $mess);
                 break;
             case 3: //remount
-                echo gen_mess('replace', 'monitor', game_maintenance_depot());
+                //echo gen_mess('replace', 'monitor', game_maintenance_depot());
+                cmd_from_view($data, 'maintenance_depot', 'replace', 'modearea');
                 $mess="<pp pn='ppic'>".$images_path."maintenance_.png"."</pp>";
                 echo gen_multi_mess('setpp', 'monitor', $mess);
                 break;
@@ -803,7 +710,7 @@ function cmd_sink(&$data) {
                 default:
                     gen_debug('encyclopedia default case...',4);
                     echo gen_mess('replace', 'monitor', user_encyclopedia());
-                    echo gen_mess('replace', 'controlbar', '<span>|элементы управления энциклОпедией</span><span>|</span>');
+                    //echo gen_mess('replace', 'controlbar', '<span>|элементы управления энциклОпедией</span><span>|</span>');
                     break;
             }
             break;
@@ -845,7 +752,7 @@ function cmd_sink(&$data) {
                 case 'init':
                 default:
                     market_init_controller($data);
-                    echo gen_mess('replace', 'controlbar', '<span>|элементы управления рынками</span><span>|</span>');
+                    //echo gen_mess('replace', 'controlbar', '<span>|элементы управления рынками</span><span>|</span>');
                     break;
             }
             break;
@@ -860,7 +767,7 @@ function cmd_sink(&$data) {
                 case 'init':
                 default:
                     tuning_init_controller($data);
-                    echo gen_mess('replace', 'controlbar', '<span>|элементы управления настройками корабля</span><span>|</span>');
+                    //echo gen_mess('replace', 'controlbar', '<span>|элементы управления настройками корабля</span><span>|</span>');
                     break;
             }
             break;
@@ -1043,11 +950,7 @@ if(connect($db_host, $db_name, $db_user, $db_password)) {
         gen_debug("mode:".$data['mode'].", cmd:".$data['cmd'].", val:".$data['val'],3);
         $data['stamp']=getmicrotime();
         if( check_session($data) ) {
-
             gen_debug('session successfully...',4);
-
-            
-
             $data['val_dec']=decode_id($data['val']);
             cmd_sink($data);
         } else {
