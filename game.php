@@ -100,8 +100,7 @@ function battle_init_controller(&$data) {
        // gen_debug("current person:".$data['users'][0]['owned_person_id'],4);
         do_setperson_mode($data);
         echo gen_mess('mode', 'set', 'battle');
-      //  echo gen_mess('replace', 'controlbar', battle_menu());
-        echo gen_mess('replace', 'monitor', "<div id='map'></div>");//onmousedown=handleMouseDown(event,'map');
+        echo gen_mess('replace', 'monitor', "<div id='map'></div>");
         if ( do_battle_ships($data) ) {
             gen_debug("processing battle..",4);
             $mess="<pp pn='ppic'>".$images_path."battle_background.png</pp>";
@@ -299,23 +298,17 @@ function location_init_controller(&$data) {
     $mess="";
     gen_debug("selected location: ".$data['val_dec'],2);
 
-    //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
-    //cmd_from_view($data, "mode_menu", "replace", "modemenu");
     $data['mode_menu']=array("назад"=>"sendm('galaxy');");
     cmd_from_view($data, "navigation", "replace", "monitor");
     echo gen_mess('mode', 'set', 'location');
     if (do_location($data) ) {
-        echo gen_mess('replace', 'controlbar', '<span>|элементы управления локациями</span><span>|</span>');
         switch($data['location'][0]['location_type']) {
             case 2: //market
-                //echo gen_mess('replace', 'monitor', game_market());
-                //echo gen_mess('replace', 'monitor', game_market());
                 cmd_from_view($data, 'market', 'replace', 'modearea');
                 $mess="<pp pn='ppic'>".$images_path."market_.png"."</pp>";
                 echo gen_multi_mess('setpp', 'monitor', $mess);
                 break;
             case 3: //remount
-                //echo gen_mess('replace', 'monitor', game_maintenance_depot());
                 cmd_from_view($data, 'maintenance_depot', 'replace', 'modearea');
                 $mess="<pp pn='ppic'>".$images_path."maintenance_.png"."</pp>";
                 echo gen_multi_mess('setpp', 'monitor', $mess);
@@ -398,15 +391,8 @@ function galaxy_init_controller(&$data) {
          //   gen_debug("sample:".$e['owner_system_id'].", ".$e['person_id'],4);
         //}
         gen_debug("location system_id:".$data['person'][0]['owner_system_id'],2);
-       // echo gen_mess('replace', 'controlbar', '<span>|</span><span>элементы управления галактикой... не предусмотрено!</span><span>|</span>');
-
-        //echo gen_mess('replace', 'monitor', "<div id='map'></div>");
-        //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
-        //echo gen_mess('replace', 'modemenu',"<span />");
-
         $data['mode_menu']=array("назад"=>"sendm('galaxy');");
         cmd_from_view($data, "galaxy_navigation", "replace", "modearea");
-        //cmd_from_view($data, "navigation", "replace", "monitor");
 
         $mess="<pp pn='ppic'>images/galaxy/galaxy_background.png"."</pp>";
         echo gen_multi_mess('setpp', 'monitor', $mess);
@@ -651,7 +637,6 @@ function cmd_sink(&$data) {
                 default:
                     gen_debug('encyclopedia default case...',4);
                     echo gen_mess('replace', 'monitor', user_encyclopedia());
-                    //echo gen_mess('replace', 'controlbar', '<span>|элементы управления энциклОпедией</span><span>|</span>');
                     break;
             }
             break;
@@ -660,7 +645,6 @@ function cmd_sink(&$data) {
                 case 'init':
                 default:
                     echo gen_mess('replace', 'monitor', user_news());
-                    echo gen_mess('replace', 'controlbar', '<span>|элементы управления новостями</span><span>|</span>');
                     break;
             }
             break;
@@ -683,7 +667,6 @@ function cmd_sink(&$data) {
                 case 'init':
                 default:
                     market_init_controller($data);
-                    //echo gen_mess('replace', 'controlbar', '<span>|элементы управления рынками</span><span>|</span>');
                     break;
             }
             break;
@@ -692,7 +675,6 @@ function cmd_sink(&$data) {
                 case 'init':
                 default:
                     tuning_init_controller($data);
-                    //echo gen_mess('replace', 'controlbar', '<span>|элементы управления настройками корабля</span><span>|</span>');
                     break;
             }
             break;
