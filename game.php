@@ -266,18 +266,11 @@ function gnavi_select_controller(&$data) {
 }
 
 function person_init_controller(&$data) {
-    //echo gen_multi_mess('setpp', 'monitor', "<pp pn='ppic'>none</pp>");
-    //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
-    //cmd_from_view($data, "show_person", "replace", "modearea");
-
     echo gen_mess('mode', 'set', 'person');
     if ( do_person($data) ) {
         cmd_from_view($data, "show_person", "replace", "modearea");
-        //echo gen_mess('replace', 'monitor', game_person($data['person'][0]));
-
     } else {
         cmd_from_view($data, "create_person", "replace", "modearea");
-        //echo gen_mess('replace', 'monitor', game_new_person());
     }
 }
 
@@ -299,12 +292,6 @@ function sector_fly_controller(&$data){
        gen_debug("you are flying to sector ".$data['val_dec'],2);
    }
 }
-
-//function market_init_controller(&$data) {
-//    $images_path="images/locations/";
-//    $mess="";
-//    echo gen_mess('replace', 'monitor', game_market());
-//}
 
 function location_init_controller(&$data) {
     gen_debug("location_init_controller",4);
@@ -454,33 +441,6 @@ function galaxy_init_controller(&$data) {
     }
 }
 
-//function isPointInArea($_area, $_xPoint, $_yPoint) {
-
-//}
-/*
-function galaxy_mouse_controller(&$data) {
-    //echo gen_mess('replace', 'monitor', game_galaxy());
-    if (do_systems($data) ) {
-        switch($data['cmd']) {
-            case 'down':
-                gen_debug("down processing",2);
-                break;
-            case 'hover':
-                gen_debug("hover processing",2);
-                break;
-        }
-//        foreach($data['systems'] as $obj) {
-  //          $obj['system_id']."</pp>";
-    //        $obj['system_xcoord']."</pp>";
-      //      $obj['system_ycoord']."</pp>";
-
-//            gen_debug($mess,2);
-  //          echo gen_multi_mess('addobj', 'map', $mess);
-//        }
-    }
-}*/
-
-
 function login_controller(&$data) {
     if(check_login($data)) {
         gen_debug('login successfully:'.$data['user'][0]['user_login'],4);
@@ -516,8 +476,6 @@ function registry_controller(&$data) {
                 $data['mode']='userprofile';
                 $data['cmd']='init';
                 cmd_sink($data);
-
-                //echo gen_mess('replace', 'monitor', user_profile($data));
                 return true;
             }
         }
@@ -651,17 +609,12 @@ function cmd_sink(&$data) {
                     break;
                 case 'init':
                 default:
-                    //battle_init_controller($data);
+                    battle_init_controller($data);
                     break;
             }
             break;
         case 'person':
             switch($data['cmd']) {
- /*               case 'up':
-                    $data['mode']='sector';
-                    $data['cmd']='init';
-                    cmd_sink($data);
-                    break;*/
                 case 'addnew':
                     list($data['person_name'],$data['person_fraction'],$data['person_description'])=split(";",$data['val']);
                     if(do_addperson($data)) {
@@ -676,11 +629,6 @@ function cmd_sink(&$data) {
             break;
         case 'userprofile':
             switch($data['cmd']) {
- /*                case 'up':
-                    $data['mode']='sector';
-                    $data['cmd']='init';
-                    cmd_sink($data);
-                    break;*/
                 case 'update':
                     list($data['name'],$data['password1'],$data['password2'],$data['email'])=split(";",$data['val']);
                     update_userprofile($data);
@@ -688,19 +636,12 @@ function cmd_sink(&$data) {
                 case 'init':
                 default:
                     user_profile_controller($data);
-                    //cmd_from_view($data, 'change_user', 'replace', 'monitor');
-                    //echo gen_mess('replace', 'monitor', user_profile($data));
                     break;
             }
             break;
         case 'encyclopedia':
             gen_debug('encyclopedia case...',4);
             switch($data['cmd']) {
- /*                case 'up':
-                    $data['mode']='sector';
-                    $data['cmd']='init';
-                    cmd_sink($data);
-                    break;*/
                 case 'navigation':
                     list($data['topic'],$data['chapter'],$data['page'])=split(";",$data['val']);
                     gen_debug('encyclopedia-navigation:'.$data['topic'].','.$data['chapter'].','.$data['page'],2);
@@ -716,11 +657,6 @@ function cmd_sink(&$data) {
             break;
         case 'news':
             switch($data['cmd']) {
- /*               case 'up':
-                    $data['mode']='sector';
-                    $data['cmd']='init';
-                    cmd_sink($data);
-                    break;*/
                 case 'init':
                 default:
                     echo gen_mess('replace', 'monitor', user_news());
@@ -730,11 +666,6 @@ function cmd_sink(&$data) {
             break;
          case 'location':
             switch($data['cmd']) {
-  /*               case 'up':
-                    $data['mode']='sector';
-                    $data['cmd']='init';
-                    cmd_sink($data);
-                    break;*/
                 case 'init':
                 default:
                     location_init_controller($data);
@@ -758,12 +689,6 @@ function cmd_sink(&$data) {
             break;
          case 'tuning':
             switch($data['cmd']) {
- /*                case 'up':
-                    gen_debug("up go to sector",2);
-                    $data['mode']='sector';
-                    $data['cmd']='init';
-                    cmd_sink($data);
-                    break;*/
                 case 'init':
                 default:
                     tuning_init_controller($data);
@@ -773,12 +698,6 @@ function cmd_sink(&$data) {
             break;
          case 'sector':
             switch($data['cmd']) {
- /*               case 'up':
-                    gen_debug("up go to system",2);
-                    $data['mode']='system';
-                    $data['cmd']='init';
-                    cmd_sink($data);
-                    break;*/
                 case 'flying':
                     sector_fly_controller($data);
                     break;
@@ -795,12 +714,6 @@ function cmd_sink(&$data) {
             break;
         case 'system':
             switch($data['cmd']) {
- /*                case 'up':
-                    gen_debug("up go to galaxy",2);
-                    $data['mode']='galaxy';
-                    $data['cmd']='init';
-                    cmd_sink($data);
-                    break;*/
                 case 'flying':
                     system_fly_controller($data);
                     break;
@@ -843,11 +756,6 @@ function cmd_sink(&$data) {
             break;
         case 'galaxy':
             switch($data['cmd']) {
- /*                case 'up':
-                    $data['mode']='galaxy';
-                    $data['cmd']='init';
-                    cmd_sink($data);
-                    break;*/
                 case 'select':
                     gen_debug("galaxy select:".$data['val_dec'],4);
                     galaxy_select_controller($data);
@@ -873,9 +781,6 @@ function cmd_sink(&$data) {
             break;
         default:
             cmd_from_view($data, 'game_structure', 'replace', 'main');
-            //echo gen_mess('replace', 'main', game_structure($data['user'][0]['user_login']));
-            //echo gen_mess('mode', 'set', 'userpofile');
-            //echo gen_mess('replace', 'monitor', user_profile($data));
             $data['mode']='galaxy';
             $data['cmd']='init';
             cmd_sink($data);
