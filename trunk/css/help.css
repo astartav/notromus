@@ -1,0 +1,20 @@
+
+root {
+    display: block;
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+#main {
+    background-color: #ddffdd;
+    border-left: 1px solid green;
+    border-right: 1px solid green;
+    border-top: 1px solid #ddffdd;
+    width: 60%;
+    height: 100%;
+    padding: 0 20px;
+    margin: 0 20%;
+}
