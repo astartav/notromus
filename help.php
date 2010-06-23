@@ -20,7 +20,9 @@
                 "битва"=>"battle",
                 "навигация"=>"navigation",
                 "корабль"=>"ship",
-                "введение"=>"main"
+                "введение"=>"main",
+                "персонаж"=>"person",
+                "пользователь"=>"user"
             );
 
             foreach($namelist as $key=>$value) {
