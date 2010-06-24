@@ -18,3 +18,12 @@ html, body {
     padding: 0 20px;
     margin: 0 20%;
 }
+
+#menu {
+    background-color: #ffdddd;
+    width: 60%;
+    padding: 0 20px;
+    margin: 0 20%;
+    border-left: 1px solid green;
+    border-right: 1px solid green;
+}
