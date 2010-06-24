@@ -1,6 +1,6 @@
 <?php  session_start();
-$memcache = new Memcache;
-$memcache->connect('localhost', 11211) or die ("Could not connect");
+/*$memcache = new Memcache;
+$memcache->connect('localhost', 11211) or die ("Could not connect");*/
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -18,12 +18,21 @@ $memcache->connect('localhost', 11211) or die ("Could not connect");
             $replacements="";
 
             $namelist=array(
-                "битва"=>"battle",
+                "введение"=>"main",
+                "игровой мир"=>"gameworld",
+                "галактика"=>"galaxy",
+                "система"=>"system",
+                "сектор"=>"sector",
+                "локация"=>"location",
+                "пользователь"=>"user",
+                "персонаж"=>"person",
+                "фракция"=>"fraction",
+                "биониды"=>"bionyds",
+                "культ машин"=>"mechculture",
+                "инквизиторы"=>"inqizitors",
                 "навигация"=>"navigation",
                 "корабль"=>"ship",
-                "введение"=>"main",
-                "персонаж"=>"person",
-                "пользователь"=>"user"
+                "битва"=>"battle",
             );
 
             foreach($namelist as $key=>$value) {
@@ -44,10 +53,10 @@ $memcache->connect('localhost', 11211) or die ("Could not connect");
             <div id="main">
             <?php
 
-            $value = $memcache->get($helpname);
+            /*$value = $memcache->get($helpname);
             if($value) {
                 echo $value;
-            } else {
+            } else {*/
                 if( @file_exists( "help/".$helpname.".php")) {
                 $fh=fopen("help/".$helpname.".php",'r');// or die($php_errormsg);
                 if( $fh ) {
@@ -60,9 +69,9 @@ $memcache->connect('localhost', 11211) or die ("Could not connect");
                         }
                     }
                 fclose( $fh );// or die($php_errormsg);
-                $memcache->set($helpname,$all_s,false, 600) or die ("Failed to save data at the server");
+                //$memcache->set($helpname,$all_s,false, 600) or die ("Failed to save data at the server");
                 echo $all_s;
-                }
+                //}
                 } else echo "<h3>not found!</h3>";
             }
             ?>
