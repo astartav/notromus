@@ -29,7 +29,7 @@ $memcache->connect('localhost', 11211) or die ("Could not connect");*/
                 "фракция"=>"fraction",
                 "биониды"=>"bionyds",
                 "культ машин"=>"mechculture",
-                "инквизиторы"=>"inqizitors",
+                "инквизиторы"=>"inquisitors",
                 "навигация"=>"navigation",
                 "корабль"=>"ship",
                 "битва"=>"battle",
