@@ -178,7 +178,7 @@ function parse_mess(_cmd, _param, _data) {
                 ndd.style.zIndex=10;
 
                 ndd.style.Color='#00ff00';
-                ndd.style.backgroundColor='#008800';
+                ndd.style.backgroundColor='#00cc00';
                 ndd.style.border='1px dotted #00aa00';
 
                 nd.appendChild(ndd);

@@ -44,17 +44,6 @@ function navigation_menu() {
         ";
 }
 
-function game_ship() {
-    $out="
-    <div style='position:relative'>
-    <div id='trum' style='position: absolute; overflow: auto; top: 495px; left: 10px; height: 90px; width: 780px; background-color: #eeeeee; border: 1px #ff0000 solid;'>
-    </div>
-    </div>
-    ";
-
-    return $out;
-}
-
 function battle_menu() {
     //onclick=\"sendw('addnew','name;fraction;description');\"
     $out="
@@ -95,12 +84,19 @@ function battle_init_controller(&$data) {
     $images_path="images/battle/";
     $mess="";
     $size=64;
+
     if (do_person($data)) {
         $data['persons'][0]['person_mode']=3;
-       // gen_debug("current person:".$data['users'][0]['owned_person_id'],4);
+       
         do_setperson_mode($data);
         echo gen_mess('mode', 'set', 'battle');
-        echo gen_mess('replace', 'monitor', "<div id='map'></div>");
+        $data['mode_menu']=array( "аттака"=>"sendm('attack');",
+                              "полет"=>"sendm('flying');",
+                              "тюнинг"=>"sendm('battle_tuning');",
+                            );
+
+        cmd_from_view($data, "battle", "replace", "modearea");
+
         if ( do_battle_ships($data) ) {
             gen_debug("processing battle..",4);
             $mess="<pp pn='ppic'>".$images_path."battle_background.png</pp>";
@@ -112,28 +108,159 @@ function battle_init_controller(&$data) {
                 $mess.= "<pp pn='py'>".$ship['ship_ycoord']."</pp>";
                 $mess.= "<pp pn='ppic'>".$images_path."ship_".$ship['ship_type_id'].".png</pp>";
                 
-                $mess.= "<pp pn='pd'http://is-nn.ru>корабль ".$ship['ship_name']."</pp>";
+                $mess.= "<pp pn='pd'>корабль ".$ship['ship_name']."</pp>";
                 $mess.= "<pp pn='ps'>".$size."</pp>";
                 gen_debug("shipowner:".$ship['owner_person_id'].", current person:".$data['user'][0]['owned_person_id'],4);
                 if($ship['owner_person_id'] == $data['user'][0]['owned_person_id']) {
                     $mess.= "<pp pn='pb'>grey</pp>";
                 }
                 echo gen_multi_mess('addobj', 'monitor', $mess);
+
+
+
+                $mess="";
+                $mess.= "<pp pn='pid'>attack_target</pp>";
+                $mess.= "<pp pn='px'>100</pp>";
+                $mess.= "<pp pn='py'>100</pp>";
+                $mess.= "<pp pn='ppic'>".$images_path."attack.png</pp>";
+                $mess.= "<pp pn='pd'>Стрельнет сюда</pp>";
+                $mess.= "<pp pn='ps'>10</pp>";
+                $mess.= "<pp pn='pb'>orange</pp>";
+                echo gen_multi_mess('addobj', 'monitor', $mess);
+
+                $mess="";
+                $mess.= "<pp pn='pid'>flying_target</pp>";
+                $mess.= "<pp pn='px'>300</pp>";
+                $mess.= "<pp pn='py'>400</pp>";
+                $mess.= "<pp pn='ppic'>".$images_path."flying.png</pp>";
+                $mess.= "<pp pn='pd'>Полетит сюда</pp>";
+                $mess.= "<pp pn='ps'>10</pp>";
+                $mess.= "<pp pn='pb'>lime</pp>";
+                echo gen_multi_mess('addobj', 'monitor', $mess);
+
             }
         }
     }
 }
 
-function tuning_init_controller(&$data) {
+function battle_tuning_init_controller(&$data) {
     $images_path="images/tuning/";
     $mess="";
     gen_debug("selected ship: ".$data['val_dec'],2);
-    echo gen_mess('mode', 'set', 'tuning');
+    echo gen_mess('mode', 'set', 'battle_tuning');
     if (do_ship($data) && do_inventories($data) ) {
-        echo gen_mess('replace', 'monitor', game_ship());
-        switch(game_ship($data['ship'][0]['ship_type_id'])) {
-        case 0:
-        default:
+        //echo gen_mess('replace', 'monitor', game_ship());
+        cmd_from_view($data, "battle_tuning", "replace", "monitor");
+
+        //switch(game_ship($data['ship'][0]['ship_type_id'])) {
+        //case 0:
+        //default:
+            $size=64;
+            $mess="<pp pn='ppic'>".$images_path."lander.png"."</pp>";
+            echo gen_multi_mess('setpp', 'monitor', $mess);
+
+            $mess="";
+            $mess.= "<pp pn='pid'>slot_weapon_1</pp>";
+            $mess.= "<pp pn='px'>150</pp>";
+            $mess.= "<pp pn='py'>10</pp>";
+            $mess.= "<pp pn='ppic'>".$images_path."slot.png</pp>";
+            $mess.= "<pp pn='pd'>Оружие 1</pp>";
+            $mess.= "<pp pn='ps'>".$size."</pp>";
+            $mess.= "<pp pn='pb'>red</pp>";
+            echo gen_multi_mess('addobj', 'monitor', $mess);
+
+            $mess="";
+            $mess.= "<pp pn='pid'>slot_weapon_2</pp>";
+            $mess.= "<pp pn='px'>10</pp>";
+            $mess.= "<pp pn='py'>10</pp>";
+            $mess.= "<pp pn='ppic'>".$images_path."slot.png</pp>";
+            $mess.= "<pp pn='pd'>Оружие 2</pp>";
+            $mess.= "<pp pn='ps'>".$size."</pp>";
+            $mess.= "<pp pn='pb'>red</pp>";
+            echo gen_multi_mess('addobj', 'monitor', $mess);
+
+            $mess="";
+            $mess.= "<pp pn='pid'>slot_defense_1</pp>";
+            $mess.= "<pp pn='px'>10</pp>";
+            $mess.= "<pp pn='py'>150</pp>";
+            $mess.= "<pp pn='ppic'>".$images_path."slot.png</pp>";
+            $mess.= "<pp pn='pd'>Защита 1</pp>";
+            $mess.= "<pp pn='ps'>".$size."</pp>";
+            $mess.= "<pp pn='pb'>red</pp>";
+            echo gen_multi_mess('addobj', 'monitor', $mess);
+
+            $mess="";
+            $mess.= "<pp pn='pid'>slot_defense_2</pp>";
+            $mess.= "<pp pn='px'>150</pp>";
+            $mess.= "<pp pn='py'>150</pp>";
+            $mess.= "<pp pn='ppic'>".$images_path."slot.png</pp>";
+            $mess.= "<pp pn='pd'>Оружие 2</pp>";
+            $mess.= "<pp pn='ps'>".$size."</pp>";
+            $mess.= "<pp pn='pb'>red</pp>";
+            echo gen_multi_mess('addobj', 'monitor', $mess);
+
+            for ($i=0; $i<13; $i++) {
+                $mess="";
+                $mess.= "<pp pn='pid'>slot_trum_".($i+1)."</pp>";
+                $x=5+$i*($size+5);
+                $mess.= "<pp pn='px'>".$x."</pp>";
+                $mess.= "<pp pn='py'>5</pp>";
+                $mess.= "<pp pn='ppic'>".$images_path."slot.png</pp>";
+                $mess.= "<pp pn='pd'>trum ".($i+1)."</pp>";
+                $mess.= "<pp pn='ps'>".$size."</pp>";
+                $mess.= "<pp pn='pb'>red</pp>";
+                echo gen_multi_mess('addobj', 'trum', $mess);
+            }
+
+         //   break;
+        //}
+
+        $images_path="images/inventories/";
+
+        foreach($data['inventories'] as $obj) {
+            $name="slot_";
+            $desc="";
+            $mess="";
+
+            switch($obj['inventory_type']) {
+                case 1:
+                    $name.="weapon_";
+                    break;
+                case 2:
+                    $name.="defense_";
+                    break;
+                default:
+                    $name.="trum_";
+                    break;
+            }
+            $name.=$obj['inventory_slot'];
+            $desc.=$obj['inventory_name'].htmlentities("<br>",ENT_NOQUOTES,'UTF-8');
+            $desc.="Уровень износа ".$obj['inventory_quality_level'];
+            $mess.="<pp pn='ppic'>".$images_path.$obj['inventory_icon']."</pp>";
+            $mess.="<pp pn='pd'>".$desc."</pp>";
+            //gen_debug("изменение слота ".$name." - pic:".$images_path.$obj['inventory_icon'].", desc:".$desc,2);
+            echo gen_multi_mess('setpp', $name, $mess);
+        }
+    }
+
+ /*   if ( do_inventories($data) ) {
+
+    }*/
+
+
+}
+
+function navi_tuning_init_controller(&$data) {
+    $images_path="images/tuning/";
+    $mess="";
+    gen_debug("selected ship: ".$data['val_dec'],2);
+    echo gen_mess('mode', 'set', 'navi_tuning');
+    if (do_ship($data) && do_inventories($data) ) {
+        //echo gen_mess('replace', 'monitor', game_ship());
+        cmd_from_view($data, "navi_tuning", "replace", "monitor");
+   //     switch(game_ship($data['ship'][0]['ship_type_id'])) {
+   //     case 0:
+    //    default:
             $size=64;
             $mess="<pp pn='ppic'>".$images_path."lander.png"."</pp>";
             echo gen_multi_mess('setpp', 'monitor', $mess);
@@ -191,8 +318,8 @@ function tuning_init_controller(&$data) {
                 echo gen_multi_mess('addobj', 'trum', $mess);
             }
             
-            break;
-        }
+  //          break;
+  //      }
 
         $images_path="images/inventories/";
         
@@ -261,7 +388,33 @@ function gnavi_select_controller(&$data) {
     $data['mode']='galaxy';
     $data['cmd']='init';
     cmd_sink($data);
-  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
 }
 
 function person_init_controller(&$data) {
@@ -326,10 +479,6 @@ function sector_init_controller(&$data) {
     if (do_locations($data) ) {
         $data['mode_menu']=array("назад"=>"sendm('galaxy');");
         cmd_from_view($data, "navigation", "replace", "monitor");
-        //echo gen_mess('replace', 'monitor', "<div id='map'></div>");
-        //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
-        //cmd_from_view($data, "mode_menu", "replace", "modemenu");
-        //$mess="<pp pn='ppic'>".$images_path."sector_background.png"."</pp>";
         $mess="<pp pn='ppic'>images/sectors/".$data['locations'][0]['sector_background']."</pp>";
         echo gen_multi_mess('setpp', 'monitor', $mess);
         echo gen_mess('mode', 'set', 'sector');
@@ -356,10 +505,6 @@ function system_init_controller(&$data) {
         gen_debug("__person:".$data['person'][0]['person sector_id'],2);
         $data['mode_menu']=array("назад"=>"sendm('galaxy');");
         cmd_from_view($data, "navigation", "replace", "monitor");
-        //echo gen_mess('replace', 'monitor', "<div id='map'></div>");
-        //$data['mode_menu']=array("назад"=>"sendm('galaxy');");
-        //cmd_from_view($data, "mode_menu", "replace", "modemenu");
-
         $mess="<pp pn='ppic'>images/systems/".$data['sectors'][0]['system_background']."</pp>";
         echo gen_multi_mess('setpp', 'monitor', $mess);
         echo gen_mess('mode', 'set', 'system');
@@ -432,14 +577,11 @@ function login_controller(&$data) {
         gen_debug('login successfully:'.$data['user'][0]['user_login'],4);
         cmd_from_view($data, 'game_structure', 'replace', 'main');
         echo gen_mess('mode', 'set', 'galaxy');
-      //  echo gen_mess('replace', 'monitor', "<div id=map></div>");
         $data['mode']='galaxy';
         $data['cmd']='init';
         cmd_sink($data);
     } else {
         gen_debug('login fails',2);
-        //
-        //echo gen_mess('replace', 'main', guest_login());
     }
 }
 
@@ -670,11 +812,19 @@ function cmd_sink(&$data) {
                     break;
             }
             break;
-         case 'tuning':
+        case 'navi_tuning':
             switch($data['cmd']) {
                 case 'init':
                 default:
-                    tuning_init_controller($data);
+                    navi_tuning_init_controller($data);
+                    break;
+            }
+            break;
+         case 'battle_tuning':
+            switch($data['cmd']) {
+                case 'init':
+                default:
+                    battle_tuning_init_controller($data);
                     break;
             }
             break;
