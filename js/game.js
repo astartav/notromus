@@ -63,6 +63,20 @@ function set_prop(_obj, _name, _value) {
         case 'pd':
             _obj.lastChild.innerHTML=_value;
             break;
+        case 'pselect':
+            switch(_value) {
+                case 'coord':
+                    _obj.setAttribute('onmousedown', "handleMouseDown(event,'"+_obj.getAttribute('id')+"')");
+                    break;
+                case 'object':
+                    _obj.setAttribute('onmousedown', "handleSelectObj(event,'"+_obj.getAttribute('id')+"')");
+                    break;
+                default:
+                     _obj.setAttribute('onmousedown', "undefined");
+                    break;
+            }
+            //alert('set pselect: '+_obj.getAttribute('id'));
+            break;
         default:
             _obj.innerHTML=_value;
             break;
@@ -135,20 +149,23 @@ function parse_mess(_cmd, _param, _data) {
 
                 for(var j=0; j<_data.length; j++) {
                     switch(_data[j].pname) {
-                        case 'pselect':
+                      /*    case 'pselect':
                             if(nd.id!=undefined) {
+                              
                                 switch(_data[j].pvalue) {
                                     case 'object':
                                         nd.setAttribute('onmousedown', "handleSelectObj(event,'"+nd.id+"')");
                                         break;
                                     case 'coord':
-                                    default:
                                         nd.setAttribute('onmousedown', "handleMouseDown(event,'"+nd.id+"')");
+                                        break;
+                                    default:
+                                        nd.setAttribute('onmousedown', "undefined");
                                         break;
                                 }
                                 
                             }
-                            break;
+                            break;*/
                         case 'pd':
                             ndd.innerHTML=_data[j].pvalue;
                             //set_prop(ndd, "ppdesc", _data[j].pvalue);
@@ -338,13 +355,13 @@ function handleSelectObj(_e, _name) {
 
 function handleMouseDown(_e, _name) {
     var elem = document.getElementById(_name);
-    alert('!');
+   // alert('!');
     if(elem!=undefined) {
         var _divOffset=getOffsetSum(elem);
         if (_e.clientX || _e.clientY) {
             _x =  _e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft-_divOffset.left - 1;
             _y =  _e.clientY+document.body.scrollTop+document.documentElement.scrollTop-_divOffset.top - 1;
-            alert('!:'+_x+','+_y);
+           // alert('!:'+_x+','+_y);
             sendi('down',_x+";"+_y);
         }
     } else alert(_name+' is not defined!');

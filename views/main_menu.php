@@ -1,4 +1,4 @@
-<div id="left_menu"></div>
+<!--<div id="left_menu"></div>-->
 <div id='mainmenu'>
     <a href='./help.php' target="_blank" >Энциклопедия</a>
     <a href='#' onclick="sendm('news');" >Новости проекта</a>
@@ -11,4 +11,5 @@
         Ваш <a href='#' onclick="sendm('person');" >персонаж</a><br>
     </div>
 
-</div><div id="right_menu"></div>
+</div>
+<!--<div id="right_menu"></div>-->
