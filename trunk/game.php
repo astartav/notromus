@@ -65,18 +65,63 @@ function battle_menu() {
 }
 
 
-
-
-function battle_attack_controller(&$data) {
+function battack_init_controller(&$data) {
     gen_debug("battle attack controller..",4);
-    $data['cmd']='';
-    echo gen_mess('mode', 'set', 'attack');
+    echo gen_mess('mode', 'set', 'battack');
+    $mess="";
+    $mess.= "<pp pn='pb'>white</pp>";
+    echo gen_multi_mess('setpp', 'attack_target', $mess);
+
+    $mess="";
+    $mess.= "<pp pn='pselect'>coord</pp>";
+    echo gen_multi_mess('setpp', 'monitor', $mess);
 }
 
-function battle_move_controller(&$data) {
-    gen_debug("battle move controller..",4);
-    $data['cmd']='';
-    echo gen_mess('mode', 'set', 'move');
+function battack_down_controller(&$data) {
+    gen_debug("battle down controller..",4);
+    list($xx,$yy)=split(";",$data['val']);
+    $mess="";
+    $mess.= "<pp pn='pb'>orange</pp>";
+    $mess.= "<pp pn='px'>".$xx."</pp>";
+    $mess.= "<pp pn='py'>".$yy."</pp>";
+    echo gen_multi_mess('setpp', 'attack_target', $mess);
+
+
+    $mess="";
+    $mess.= "<pp pn='pselect'>unset</pp>";
+    echo gen_multi_mess('setpp', 'monitor', $mess);
+
+    echo gen_mess('mode', 'set', 'battle');
+}
+
+
+function bflying_init_controller(&$data) {
+    gen_debug("battle flying controller..",4);
+    echo gen_mess('mode', 'set', 'bflying');
+    $mess="";
+    $mess.= "<pp pn='pb'>white</pp>";
+    echo gen_multi_mess('setpp', 'flying_target', $mess);
+
+    $mess="";
+    $mess.= "<pp pn='pselect'>coord</pp>";
+    echo gen_multi_mess('setpp', 'monitor', $mess);
+}
+
+function bflying_down_controller(&$data) {
+    gen_debug("battle down controller..",4);
+    list($xx,$yy)=split(";",$data['val']);
+    $mess="";
+    $mess.= "<pp pn='pb'>green</pp>";
+    $mess.= "<pp pn='px'>".$xx."</pp>";
+    $mess.= "<pp pn='py'>".$yy."</pp>";
+    echo gen_multi_mess('setpp', 'flying_target', $mess);
+
+
+    $mess="";
+    $mess.= "<pp pn='pselect'>unset</pp>";
+    echo gen_multi_mess('setpp', 'monitor', $mess);
+
+    echo gen_mess('mode', 'set', 'battle');
 }
 
 function battle_init_controller(&$data) {
@@ -90,10 +135,11 @@ function battle_init_controller(&$data) {
        
         do_setperson_mode($data);
         echo gen_mess('mode', 'set', 'battle');
-        $data['mode_menu']=array( "аттака"=>"sendm('attack');",
+        $data['mode_menu']=array( "аттака"=>"sendm('battack');",
                               "полет"=>"sendm('flying');",
                               "тюнинг"=>"sendm('battle_tuning');",
                             );
+
 
         cmd_from_view($data, "battle", "replace", "modearea");
 
@@ -114,10 +160,9 @@ function battle_init_controller(&$data) {
                 if($ship['owner_person_id'] == $data['user'][0]['owned_person_id']) {
                     $mess.= "<pp pn='pb'>grey</pp>";
                 }
-                echo gen_multi_mess('addobj', 'monitor', $mess);
+                echo gen_multi_mess('addobj', 'map', $mess);
 
-
-
+            }
                 $mess="";
                 $mess.= "<pp pn='pid'>attack_target</pp>";
                 $mess.= "<pp pn='px'>100</pp>";
@@ -126,7 +171,8 @@ function battle_init_controller(&$data) {
                 $mess.= "<pp pn='pd'>Стрельнет сюда</pp>";
                 $mess.= "<pp pn='ps'>10</pp>";
                 $mess.= "<pp pn='pb'>orange</pp>";
-                echo gen_multi_mess('addobj', 'monitor', $mess);
+                $mess.= "<pp pn='pselect'>object</pp>";
+                echo gen_multi_mess('addobj', 'map', $mess);
 
                 $mess="";
                 $mess.= "<pp pn='pid'>flying_target</pp>";
@@ -136,9 +182,13 @@ function battle_init_controller(&$data) {
                 $mess.= "<pp pn='pd'>Полетит сюда</pp>";
                 $mess.= "<pp pn='ps'>10</pp>";
                 $mess.= "<pp pn='pb'>lime</pp>";
-                echo gen_multi_mess('addobj', 'monitor', $mess);
+                $mess.= "<pp pn='pselect'>coord</pp>";
+                echo gen_multi_mess('addobj', 'map', $mess);
 
-            }
+                $mess="";
+                $mess.= "<pp pn='pselect'>unset</pp>";
+                echo gen_multi_mess('setpp', 'monitor', $mess);
+
         }
     }
 }
@@ -388,32 +438,6 @@ function gnavi_select_controller(&$data) {
     $data['mode']='galaxy';
     $data['cmd']='init';
     cmd_sink($data);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
 
@@ -688,53 +712,37 @@ function cmd_sink(&$data) {
                 echo gen_mess('mode', 'set', 'login');
             } else gen_debug('logout fails',2);
             break;
-        case 'attack':
+        case 'battack':
             switch($data['cmd']) {
                 case 'down':
-                    gen_debug("attack: down map select",4);
+                    gen_debug("battack: down map select",4);
+                    battack_down_controller($data);
+                    gen_debug("battack: down map select proceed",4);
                     break;
                 case 'select':
-                    gen_debug("battle attack select",4);
+                    gen_debug("battack: select map:",4);
                     break;
                 default:
-                    $data['mode']='battle';
-                    $data['cmd']='continue';
-                    cmd_sink($data);
+                    battack_init_controller($data);
                     break;
             }
             break;
-        case 'move':
+        case 'bflying':
             switch($data['cmd']) {
                 case 'down':
-                    gen_debug("move: down map select",4);
-                    break;
+                    bflying_down_controller($data);
+                     break;
                 case 'select':
-                    gen_debug("battle move select",4);
+                    gen_debug("bflying: select map:",4);
                     break;
                 default:
-                    $data['mode']='battle';
-                    $data['cmd']='continue';
-                    cmd_sink($data);
+                    bflying_init_controller($data);
                     break;
             }
             break;
         case 'battle':
             switch($data['cmd']) {
-//                case 'select':
-//                    gen_debug("battle select:".$data['val_dec'],4);
-//                    galaxy_select_controller($data);
-//                    break;
-                case 'attack':
-                    gen_debug("battle: attack processing..",4);
-                    battle_attack_controller($data);
-                    break;
-                case 'move':
-                    gen_debug("battle: move  processing..",4);
-                    battle_move_controller($data);
-                    break;
-                case 'continue':
-                    gen_debug("continue battling..",4);
-                    break;
+            
                 case 'init':
                 default:
                     battle_init_controller($data);
